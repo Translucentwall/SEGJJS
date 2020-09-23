@@ -1,0 +1,15 @@
+# Created by .ignore support plugin (hsz.mobi)
+/build/
+/config/
+/node_modules/
+/src/
+/static/
+/Jenkinsfile
+/.postcssrc.js
+/.editorconfig
+/.gitignore
+/package.json
+/index.html
+/package-lock.json
+/README.md
+/.babelrc

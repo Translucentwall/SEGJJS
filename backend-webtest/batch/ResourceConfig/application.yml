@@ -1,0 +1,23 @@
+spring:
+  h2:
+    console:
+      enabled: false
+  jpa:
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: edu.nju.se.teamnamecannotbeempty.data.MyDialect
+        show_sql: false
+        format_sql: false
+    hibernate:
+      ddl-auto: none
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/se3?serverTimezone=CTT&characterEncoding=UTF-8
+    username: root
+    password: root
+
+server:
+  port: 9910
