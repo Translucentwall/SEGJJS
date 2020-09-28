@@ -17,7 +17,7 @@
 6. 将src/test/resources文件夹标记为"Test Resources Root"，如果idea没帮你做的话；并将测试用的资源放在这个文件夹内
 7. 添加maven依赖时请关注是否产生冲突，并用exclude或修改版本等手段消除冲突
 8. 每个模块有各自的ignore配置，请分模块配置，不要全部写在根目录的ignore配置下
-
+9
 ## 开发指南
 
 1. 在开发阶段，建议使用h2数据库进行调试（相关依赖已经添加）；因为h2是内存数据库，数据不会被持久化到硬盘上，所以需要时要导入初始数据，方法是在sql文件夹（已存在）下添加import.sql脚本，并将sql文件夹标记为资源文件夹（右键sql文件夹-Mark Directory as Resources Root）。sql文件夹下的文件不会被上传，可以放心编写。
