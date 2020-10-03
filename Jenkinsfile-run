@@ -7,8 +7,8 @@ node {
                 extensions                       : [],
                 submoduleCfg                     : [],
                 userRemoteConfigs                : [
-                        [credentialsId: 'se3-gitlab',
-                         url          : 'http://212.129.149.40/171250558_teamnamecannotbeempty/backend-webtest.git']
+                        [credentialsId: '283ec90c-febf-4add-94fa-5d6769cd017c',
+                         url          : 'git@git.nju.edu.cn:171250554/segjjs.git']
                 ]
         ])
     }
