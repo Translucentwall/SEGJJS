@@ -23,7 +23,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/se3?serverTimezone=CTT&characterEncoding=UTF-8
     username: root
-    password: root
+    password: segjjs666
     open-in-view: true
 
 server:
