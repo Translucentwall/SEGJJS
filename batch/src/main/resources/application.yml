@@ -4,7 +4,7 @@ spring:
       enabled: false
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     open-in-view: true
     properties:
       hibernate:
