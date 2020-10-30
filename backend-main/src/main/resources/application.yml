@@ -18,13 +18,12 @@ spring:
             indexBase: "/var/lucene/indexes"
 
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/se3?serverTimezone=CTT&characterEncoding=UTF-8
     username: root
     password: root
-    open-in-view: true
 
 server:
   servlet:

@@ -57,6 +57,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.67</version>
+        </dependency>
+
+        <dependency>
             <groupId>edu.nju.se.teamnamecannotbeempty</groupId>
             <artifactId>data</artifactId>
             <version>0.0.1-SNAPSHOT</version>
@@ -68,6 +74,7 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
 
     </dependencies>
 

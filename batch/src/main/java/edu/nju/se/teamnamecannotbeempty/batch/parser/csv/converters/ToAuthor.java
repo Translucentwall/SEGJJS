@@ -1,25 +1,27 @@
 package edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters;
 
 import com.opencsv.bean.AbstractCsvConverter;
+import edu.nju.se.teamnamecannotbeempty.data.domain.Affiliation;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Author;
 
 import java.util.Collection;
 import java.util.HashMap;
 
-public class ToAuthor extends AbstractCsvConverter {
+public class ToAuthor{
     private static final HashMap<String, Author> saveMap = new HashMap<>();
 
-    @Override
-    public Object convertToRead(String value) {
-        value = value.trim();
-        if (value.isEmpty()) return null;
-        String lowercase = value.toLowerCase();
+    public static Author getAuthor(String name){
+        name=name.trim();
+        if(name.isEmpty()) {
+            return null;
+        }
+        String lowercase = name.toLowerCase();
         Author result = saveMap.get(lowercase);
         if (result == null) {
             synchronized (saveMap) {
                 if ((result = saveMap.get(lowercase)) == null) {
                     result = new Author();
-                    result.setName(value);
+                    result.setName(name);
                     result.setLowerCaseName(lowercase);
                     saveMap.put(lowercase, result);
                 }

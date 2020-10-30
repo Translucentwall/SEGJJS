@@ -1,6 +1,8 @@
 package edu.nju.se.teamnamecannotbeempty.data.repository;
 
+import edu.nju.se.teamnamecannotbeempty.data.data_transfer.AffiliationByYear;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Author;
+import edu.nju.se.teamnamecannotbeempty.data.domain.AuthorAffiliationYear;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.util.Streamable;
@@ -76,4 +78,9 @@ public interface AuthorDao extends JpaRepository<Author, Long> {
     Streamable<Author> getAll();
 
     List<Author> getByAlias_Id(Long id);
+
+    @Query("select new edu.nju.se.teamnamecannotbeempty.data.data_transfer.AffiliationByYear" +
+            "(aay.affiliation.name,aay.affiliation.id, aay.year) " +
+            "from AuthorAffiliationYear aay where aay.author.id=?1 order by aay.year asc")
+    List<AffiliationByYear> getAffiliationsOfAuthorByYear(Long authorId);
 }
