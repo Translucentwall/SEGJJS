@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>edu.nju.se.teamnamecannotbeempty</groupId>
-        <artifactId>se3</artifactId>
+        <artifactId>segjjs</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
@@ -126,7 +126,7 @@
     </dependencies>
 
     <build>
-        <finalName>se3</finalName>
+        <finalName>segjjs</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
