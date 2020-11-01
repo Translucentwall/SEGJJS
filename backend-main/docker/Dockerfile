@@ -1,6 +1,6 @@
 FROM openjdk:8-jre-alpine
 
-ADD segjjs.jar /app.jar
+ADD se3.jar /app.jar
 
 ADD run.sh /run.sh
 

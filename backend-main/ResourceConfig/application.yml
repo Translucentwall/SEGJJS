@@ -3,7 +3,7 @@ spring:
     console:
       enabled: false
   jpa:
-    open-in-view: true
+    open-in-view: false
     show-sql: false
     properties:
       hibernate:
@@ -11,28 +11,23 @@ spring:
         show_sql: false
         format_sql: false
         search:
-          model_mapping: "edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search.SearchMappingFactory"
           analyzer: "noStopWords"
           default:
             directory_provider: "filesystem"
             indexBase: "/var/lucene/indexes"
 
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/se3?serverTimezone=CTT&characterEncoding=UTF-8
     username: root
     password: root
-    open-in-view: true
 
 server:
   servlet:
     context-path: "/api"
-
-rmi:
-  host: "127.0.0.1"
-  port: "9911"
 
 
 ################ 消息配置 ################

@@ -25,29 +25,69 @@ public class PaperDelegation {
     public static final String DEFAULT_SPLIT_ON = ",(?=[^ ])|; ";
     public static final String TERMS_SPLIT_ON = ";|, ?";
 
+    @CsvBindByName(column = "Document Title")
     private String title;
 
+    @CsvBindAndSplitByName(
+            column = "Authors",
+            elementType = Author.class,
+            splitOn = DEFAULT_SPLIT_ON,
+            converter = ToAuthor.class,
+            collectionType = ArrayList.class
+    )
     private List<Author> authors;
 
+    @CsvBindAndSplitByName(
+            column = "Author Affiliations",
+            elementType = Affiliation.class,
+            splitOn = DEFAULT_SPLIT_ON,
+            converter = ToAffiliation.class,
+            collectionType = ArrayList.class
+    )
     private List<Affiliation> affiliations;
 
+    @CsvCustomBindByName(
+            column = "Publication Title",
+            converter = ToConference.class
+    )
     private Conference conference;
 
+    @CsvBindByName(column = "Publication Year")
     private Integer year;
+    @CsvBindByName(column = "Volume")
     private Integer volume;
+    @CsvBindByName(column = "Start Page")
     private String start_page;
+    @CsvBindByName(column = "End Page")
     private String end_page;
+    @CsvBindByName(column = "Abstract")
     private String summary;
+    @CsvBindByName(column = "ISSN")
     private String issn;
+    @CsvBindByName(column = "ISBNs")
     private String isbn;
+    @CsvBindByName(column = "DOI")
     private String doi;
+    @CsvBindByName(column = "Funding Information")
     private String funding_info;
-   private String pdf_link;
+    @CsvBindByName(column = "PDF Link")
+    private String pdf_link;
 
+    @CsvBindAndSplitByName(
+            column = "Author Keywords",
+            elementType = Term.class,
+            splitOn = TERMS_SPLIT_ON,
+            converter = ToTerm.class,
+            collectionType = ArrayList.class
+    )
+    //author keywords
     private List<Term> ak;
 
+    @CsvBindByName(column = "Article Citation Count")
     private Integer citation;
+    @CsvBindByName(column = "Reference Count")
     private Integer reference;
+    @CsvBindByName(column = "Publisher")
     private String publisher;
 
     /**
@@ -78,9 +118,9 @@ public class PaperDelegation {
         paper.setPdf_link(pdf_link);
         paper.setTitle(title);
 
-//        if (conference.getName().equals("NA") && !StringUtils.isBlank(publisher)) {
-//            conference = ToConference.addConference(publisher);
-//        }
+        if (conference.getName().equals("NA") && !StringUtils.isBlank(publisher)) {
+            conference = ToConference.addConference(publisher);
+        }
         paper.setConference(conference);
         paper.setVolume(volume);
         if (StringUtils.isNumeric(start_page))
@@ -105,9 +145,8 @@ public class PaperDelegation {
         paper.setCitation(citation == null ? Integer.valueOf(0) : citation);
         paper.setReference(reference == null ? Integer.valueOf(0) : reference);
         paper.setPublisher(publisher);
-        if (year == null && conference != null) {
+        if (year == null && conference != null)
             year = conference.getYear();
-        }
         paper.setYear(year);
         return paper;
     }

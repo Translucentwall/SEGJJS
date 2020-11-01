@@ -31,7 +31,6 @@ public class PaperPopWorker {
     public void generatePaperPop() {
         int count = Math.toIntExact(count());
         pops.ensureCapacity(2 * count);
-        //TODO 获得ref的地方应为AddRef
         Attacher.getRefs().parallelStream().filter(ref -> ref.getReferee() != null)
                 .collect(Collectors.groupingBy(Ref::getReferee))
                 .forEach((referee, refs) ->

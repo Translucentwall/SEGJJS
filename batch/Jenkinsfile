@@ -7,7 +7,7 @@ node {
                 extensions                       : [],
                 submoduleCfg                     : [],
                 userRemoteConfigs                : [
-                        [credentialsId: 'segjjs-gitlab',
+                        [credentialsId: 'se3-gitlab',
                          url          : 'http://212.129.149.40/171250558_teamnamecannotbeempty/backend-webtest.git']
                 ]
         ])

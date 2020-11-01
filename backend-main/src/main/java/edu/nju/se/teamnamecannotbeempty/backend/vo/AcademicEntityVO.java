@@ -16,14 +16,13 @@ public class AcademicEntityVO {
     private List<SimplePaperVO> significantPapers;
     //以空格隔开的字符串，n个数字，第一个数字是年份
     private String popTrend;
-    List<YearlyAffiliation> yearlyAffiliationList;
 
 
     public AcademicEntityVO(int type, long id, String name, int refSum,
                             List<AcademicEntityItem> authors, List<AcademicEntityItem> affiliations,
                             List<AcademicEntityItem> conferences, List<TermItem> terms,
                             List<SimplePaperVO> significantPapers, List<YearlyTerm> yearlyTerms,
-                            String popTrend, List<YearlyAffiliation> yearlyAffiliationList) {
+                            String popTrend) {
         this.type = type;
         this.id = id;
         this.name = name;
@@ -35,7 +34,6 @@ public class AcademicEntityVO {
         this.significantPapers = significantPapers;
         this.yearlyTerms = yearlyTerms;
         this.popTrend = popTrend;
-        this.yearlyAffiliationList=yearlyAffiliationList;
     }
 
     public int getType() {

@@ -12,14 +12,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ToAffiliation{
+public class ToAffiliation extends AbstractCsvConverter {
     private static final HashMap<String, Affiliation> saveMap = new HashMap<>();
     private static final Affiliation na;
     private static Map<String, String> synonyms = new HashMap<>();
 
-    public static Affiliation getAffiliation(String name){
-        name=name.trim();
-        String formatted=name;
+    @Override
+    public Object convertToRead(String value) {
+        value = StringUtils.abbreviateMiddle(value.trim(), "...", 254);
+        if (StringUtils.isBlank(value) || value.equals(",")) return na;
+        String formatted = value;
         for (Map.Entry<String, String> entry : synonyms.entrySet()) {
             formatted = formatted.replaceAll(entry.getKey(), entry.getValue());
         }
@@ -28,7 +30,7 @@ public class ToAffiliation{
             synchronized (saveMap) {
                 if ((result = saveMap.get(formatted)) == null) {
                     result = new Affiliation();
-                    result.setName(name);
+                    result.setName(value);
                     result.setFormattedName(formatted);
                     saveMap.put(formatted, result);
                 }

@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>edu.nju.se.teamnamecannotbeempty</groupId>
-    <artifactId>segjjs</artifactId>
+    <artifactId>se3</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>segjjs</name>
-    <description>Backend of segjjs project</description>
+    <name>se3</name>
+    <description>Backend of se3 project</description>
     <packaging>pom</packaging>
 
     <repositories>
