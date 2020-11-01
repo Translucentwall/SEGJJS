@@ -47,7 +47,6 @@ public class DataImportJob implements IDataImportJob {
             InputStream tse_json= getClass().getResourceAsStream("/datasource/tse.json");
 
             String name = "all together";
-
             total=readFile(name,tse_json);
 
             batchGenerator.trigger_init(total);
