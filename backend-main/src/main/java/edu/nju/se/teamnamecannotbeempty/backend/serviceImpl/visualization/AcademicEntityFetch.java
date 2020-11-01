@@ -2,6 +2,7 @@ package edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.visualization;
 
 import edu.nju.se.teamnamecannotbeempty.backend.config.parameter.EntityMsg;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.*;
+import edu.nju.se.teamnamecannotbeempty.data.data_transfer.AffiliationByYear;
 import edu.nju.se.teamnamecannotbeempty.data.domain.*;
 import edu.nju.se.teamnamecannotbeempty.data.repository.*;
 import edu.nju.se.teamnamecannotbeempty.data.repository.popularity.PaperPopDao;
@@ -113,10 +114,17 @@ public class AcademicEntityFetch {
         ).sum())).sorted(Comparator.comparing(PopByYear::getYear)).collect(Collectors.toList());
         String popTrend = generatePopTrend(popByYearList);
 
+        //获得研究者在不同时间的单位情况
+        List<AffiliationByYear> affiliationByYearList=authorDao.getAffiliationsOfAuthorByYear(id);
+        List<YearlyAffiliation> yearlyAffiliationList=affiliationByYearList.stream().map(
+                affiliationByYear -> new YearlyAffiliation(affiliationByYear.getName(),
+                        affiliationByYear.getYear(),affiliationByYear.getId())
+        ).sorted().collect(Collectors.toList());
+
         return new AcademicEntityVO(entityMsg.getAuthorType(), id,
                 authorDao.findById(id).orElseGet(Author::new).getActual().getName(),
                 sumCitation, null, affiEntityItems, conferenceEntityItems, termItems,
-                simplePaperVOS, yearlyTerms, popTrend);
+                simplePaperVOS, yearlyTerms, popTrend,yearlyAffiliationList);
     }
 
     private AcademicEntityVO affiliationEntity(long id) {
@@ -185,7 +193,7 @@ public class AcademicEntityFetch {
         return new AcademicEntityVO(entityMsg.getAffiliationType(), id, affiliationDao.findById(id).
                 orElseGet(Affiliation::new).getActual().getName(),
                 sumCitation, authorEntityItems, null, conferenceEntityItems, termItems,
-                simplePaperVOS, yearlyTerms, popTrend);
+                simplePaperVOS, yearlyTerms, popTrend,null);
     }
 
     private AcademicEntityVO conferenceEntity(long id) {
@@ -215,7 +223,7 @@ public class AcademicEntityFetch {
         return new AcademicEntityVO(entityMsg.getConferenceType(), id, conferenceDao.findById(id).
                 orElseGet(Conference::new).getName(), -1,
                 authorEntityItems, affiEntityItems, null, termItems, simplePaperVOS,
-                yearlyTerms, null);
+                yearlyTerms, null,null);
     }
 
     private List<AcademicEntityItem> generateAuthorEntityItems(List<Author> authors) {

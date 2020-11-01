@@ -17,8 +17,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-public class ToTerm extends AbstractCsvConverter {
+public class ToTerm{
     private static final HashMap<String, Term> saveMap = new HashMap<>();
+    /**
+     * 保存分词结果
+     */
     private static final HashMap<List<String>, Term> tokens = new HashMap<>();
     private static final Analyzer analyzer;
 
@@ -37,30 +40,31 @@ public class ToTerm extends AbstractCsvConverter {
         analyzer = analyzer1;
     }
 
-    @Override
-    public Object convertToRead(String value) {
-        value = value.trim();
-        if (StringUtils.isBlank(value)) return null;
+    public static Term getTerm(String name){
+        name = name.trim();
+        if (StringUtils.isBlank(name)) {
+            return null;
+        }
         //规范化，转换为小写并删除末尾的句点
-        value = value.toLowerCase();
-        if (value.endsWith(".")) {
-            value = value.substring(0, value.length() - 1);
+        name = name.toLowerCase();
+        if (name.endsWith(".")) {
+            name = name.substring(0, name.length() - 1);
         }
 
-        Term result = saveMap.get(value);
+        Term result = saveMap.get(name);
         if (result == null) {
             List<String> token = null;
             try {
-                token = getTokenSet(value);
+                token = getTokenSet(name);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             synchronized (saveMap) {
-                if ((result = saveMap.get(value)) == null && (result = tokens.get(token)) == null) {
+                if ((result = saveMap.get(name)) == null && (result = tokens.get(token)) == null) {
                     result = new Term();
-                    result.setContent(value);
-                    saveMap.put(value, result);
+                    result.setContent(name);
+                    saveMap.put(name, result);
                     if (token != null) {
                         tokens.put(token, result);
                     }
