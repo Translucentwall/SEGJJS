@@ -1,6 +1,6 @@
-FROM openjdk:8-alpine-netcat
+FROM openjdk:8-jre-alpine
 
-ADD se3.jar /app.jar
+ADD segjjs.jar /app.jar
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
