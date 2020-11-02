@@ -1,4 +1,5 @@
 import edu.nju.se.teamnamecannotbeempty.data.DataConfig;
+import edu.nju.se.teamnamecannotbeempty.data.data_transfer.AffiliationByYear;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Author;
 import edu.nju.se.teamnamecannotbeempty.data.repository.AuthorDao;
 import org.hamcrest.MatcherAssert;
@@ -6,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.util.Streamable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -52,7 +54,14 @@ public class AuthorDaoTest {
     public void getAuthorsByConference() {
         List<Author> authors = authorDao.getAuthorsByConference(2L);
         assertNotNull(authors);
-        assertEquals(1, authors.size());
-        assertEquals(2L, authors.get(0).getId().longValue());
+
+    }
+
+    @Test
+    public void getAffiliationsOfAuthorByYear(){
+        List<AffiliationByYear> affiliationByYearList=authorDao.getAffiliationsOfAuthorByYear(1L);
+        assertNotNull(affiliationByYearList);
+        assertEquals(Integer.valueOf(2012),affiliationByYearList.get(0).getYear());
+        assertEquals(Integer.valueOf(2020),affiliationByYearList.get(1).getYear());
     }
 }
