@@ -5,16 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.opencsv.bean.CsvToBeanBuilder;
-import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.ToAffiliation;
-import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.ToAuthor;
-import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.ToConference;
-import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.ToTerm;
+import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.*;
 import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.intermediate.PaperImd;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Paper;
-import edu.nju.se.teamnamecannotbeempty.data.repository.AffiliationDao;
-import edu.nju.se.teamnamecannotbeempty.data.repository.AuthorDao;
-import edu.nju.se.teamnamecannotbeempty.data.repository.ConferenceDao;
-import edu.nju.se.teamnamecannotbeempty.data.repository.TermDao;
+import edu.nju.se.teamnamecannotbeempty.data.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +24,21 @@ public class FromCSV {
     private final AffiliationDao affiliationDao;
     private final TermDao termDao;
     private final ConferenceDao conferenceDao;
+    private final AA_CooperateDao aa_cooperateDao;
+    private final AuthorAffiliationYearDao authorAffiliationYearDao;
 
     private static final Logger logger = LoggerFactory.getLogger(FromCSV.class);
 
     @Autowired
-    public FromCSV(AuthorDao authorDao, AffiliationDao affiliationDao, TermDao termDao, ConferenceDao conferenceDao) {
+    public FromCSV(AuthorDao authorDao, AffiliationDao affiliationDao,
+                   TermDao termDao, ConferenceDao conferenceDao,
+                   AA_CooperateDao aa_cooperateDao, AuthorAffiliationYearDao authorAffiliationYearDao) {
         this.authorDao = authorDao;
         this.affiliationDao = affiliationDao;
         this.termDao = termDao;
         this.conferenceDao = conferenceDao;
+        this.aa_cooperateDao=aa_cooperateDao;
+        this.authorAffiliationYearDao=authorAffiliationYearDao;
     }
 
     public Collection<Paper> convertJson(InputStream in) throws IOException {
@@ -65,6 +65,9 @@ public class FromCSV {
         affiliationDao.saveAll(ToAffiliation.getSaveCollection());
         authorDao.saveAll(ToAuthor.getSaveCollection());
         conferenceDao.saveAll(ToConference.getSaveCollection());
+
+        aa_cooperateDao.saveAll(ToAuAuCoo.getSaveCollection());
+        authorAffiliationYearDao.saveAll(ToAuAffiYear.getSaveCollection());
 
         logger.info("Done convert to paper POs");
         return paperMap.values();

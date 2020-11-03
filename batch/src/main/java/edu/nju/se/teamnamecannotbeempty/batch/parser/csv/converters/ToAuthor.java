@@ -1,7 +1,5 @@
 package edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters;
 
-import com.opencsv.bean.AbstractCsvConverter;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Affiliation;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Author;
 
 import java.util.Collection;
@@ -34,4 +32,7 @@ public class ToAuthor{
         return saveMap.values();
     }
 
+    public static HashMap<String, Author> getSaveMap() {
+        return saveMap;
+    }
 }

@@ -1,14 +1,8 @@
 package edu.nju.se.teamnamecannotbeempty.batch.parser.csv.intermediate;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.ToAffiliation;
-import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.ToAuthor;
-import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.ToConference;
-import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.ToTerm;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Author_Affiliation;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Conference;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Paper;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Term;
+import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.*;
+import edu.nju.se.teamnamecannotbeempty.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,16 +117,34 @@ public class PaperImd {
         paper.setTitle(title);
         paper.setDoi(doi);
         paper.setSummary(summary);
+        int year=Integer.parseInt(time.split(" ")[1]);
         if(time!=null) {
-            paper.setYear(Integer.parseInt(time.split(" ")[1]));
+            paper.setYear(year);
         }
         List<Author_Affiliation> authorAffiliationList =new ArrayList<>();
+        List<Author> authorList=new ArrayList<>();
         for(AuthorAffiImd authorAffiImd:authorAffiImds){
-            authorAffiliationList.add(new Author_Affiliation(ToAuthor.getAuthor(authorAffiImd.getAuthor()),
-                    ToAffiliation.getAffiliation(authorAffiImd.getAffiliation())));
+            Author tempAuthor=ToAuthor.getAuthor(authorAffiImd.getAuthor());
+            Affiliation tempAffi=ToAffiliation.getAffiliation(authorAffiImd.getAffiliation());
+            authorList.add(tempAuthor);
+            //生成作者机构年份
+            ToAuAffiYear.saveAuthorAffiliationYear(new AuAffiYearImd(tempAuthor,tempAffi,year));
+            authorAffiliationList.add(new Author_Affiliation(tempAuthor, tempAffi));
         }
+        //生成作者间协作关系
+        for(int i=0; i<authorList.size(); ++i){
+            for(int j=0; j<authorList.size(); ++j){
+                if(i!=j&&(!authorList.get(i).getLowerCaseName().
+                        equals(authorList.get(j).getLowerCaseName()))){
+                    ToAuAuCoo.saveAA_Cooperate(
+                            new AuAfCooImd(authorList.get(i),authorList.get(j),year));
+                }
+            }
+        }
+
         paper.setAa(authorAffiliationList);
         Conference conference= ToConference.getConference(publisher);
+        paper.setConference(conference);
         List<Term> termList=new ArrayList<>();
         for(String keyword:keywords){
             termList.add(ToTerm.getTerm(keyword));
