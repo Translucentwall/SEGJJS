@@ -21,7 +21,7 @@ spring:
       ddl-auto: create
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/segjjs?serverTimezone=CTT&characterEncoding=UTF-8
+    url: jdbc:mysql://47.103.192.117:3306/segjjs?serverTimezone=CTT&characterEncoding=UTF-8
     username: root
     password: root
 
