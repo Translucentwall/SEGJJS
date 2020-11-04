@@ -1,8 +1,10 @@
 package edu.nju.se.teamnamecannotbeempty.batch.job.worker;
 
-import edu.nju.se.teamnamecannotbeempty.data.domain.Author;
-import edu.nju.se.teamnamecannotbeempty.data.domain.DuplicateAuthor;
+import edu.nju.se.teamnamecannotbeempty.data.domain.*;
+import edu.nju.se.teamnamecannotbeempty.data.repository.AA_CooperateDao;
+import edu.nju.se.teamnamecannotbeempty.data.repository.AuthorAffiliationYearDao;
 import edu.nju.se.teamnamecannotbeempty.data.repository.AuthorDao;
+import edu.nju.se.teamnamecannotbeempty.data.repository.PaperDao;
 import edu.nju.se.teamnamecannotbeempty.data.repository.duplication.DuplicateAuthorDao;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.slf4j.Logger;
@@ -12,7 +14,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -20,12 +24,18 @@ public class AuthorDupWorker {
     private final DuplicateAuthorDao duplicateAuthorDao;
     private final AuthorDao authorDao;
     private final AuthorPopWorker authorPopWorker;
+    private final PaperDao paperDao;
+    private final AuthorAffiliationYearDao authorAffiliationYearDao;
+    private final AA_CooperateDao aa_cooperateDao;
 
     @Autowired
-    public AuthorDupWorker(DuplicateAuthorDao duplicateAuthorDao, AuthorDao authorDao, AuthorPopWorker authorPopWorker) {
+    public AuthorDupWorker(DuplicateAuthorDao duplicateAuthorDao, AuthorDao authorDao, AuthorPopWorker authorPopWorker, PaperDao paperDao,AuthorAffiliationYearDao authorAffiliationYearDao,AA_CooperateDao aa_cooperateDao) {
+        this.authorAffiliationYearDao=authorAffiliationYearDao;
         this.duplicateAuthorDao = duplicateAuthorDao;
         this.authorDao = authorDao;
         this.authorPopWorker = authorPopWorker;
+        this.paperDao=paperDao;
+        this.aa_cooperateDao=aa_cooperateDao;
     }
 
     @Async
@@ -88,6 +98,44 @@ public class AuthorDupWorker {
                 );
             }
         });
+        List<DuplicateAuthor> dups=duplicateAuthorDao.findAll();
+        Map<Long,Long> son_idTofather_id=new HashMap();
+        for(int i=0;i<dups.size();i++){
+            son_idTofather_id.put(dups.get(i).getSon().getId(),dups.get(i).getFather().getId());
+        }
+        List<Paper> papers=paperDao.findAll();
+        for(Paper paper : papers){
+            List<Author_Affiliation> author_affiliations=paper.getAa();
+            for(Author_Affiliation author_affiliation : author_affiliations){
+                Author author=author_affiliation.getAuthor();
+                if(author==null)
+                    continue;
+                if(son_idTofather_id.containsKey(author.getId())){
+                    author_affiliation.setAuthor(authorDao.findById(son_idTofather_id.get(author.getId())).get());
+                }
+            }
+            paper.setAa(author_affiliations);
+        }
+
+        List<AuthorAffiliationYear> authorAffiliationYears=authorAffiliationYearDao.findAll();
+        for(AuthorAffiliationYear authorAffiliationYear : authorAffiliationYears){
+            if(son_idTofather_id.containsKey(authorAffiliationYear.getAuthor().getId())){
+                authorAffiliationYear.setAuthor(authorDao.findById(son_idTofather_id.get(authorAffiliationYear.getAuthor().getId())).get());
+            }
+        }
+        authorAffiliationYearDao.saveAll(authorAffiliationYears);
+
+        List<AA_Cooperate> aa_cooperates=aa_cooperateDao.findAll();
+        for(AA_Cooperate aa_cooperate:aa_cooperates){
+            if(son_idTofather_id.containsKey(aa_cooperate.getAuthor1().getId())){
+                aa_cooperate.setAuthor1(authorDao.findById(son_idTofather_id.get(aa_cooperate.getAuthor1().getId())).get());
+            }
+            if(son_idTofather_id.containsKey(aa_cooperate.getAuthor2().getId())){
+                aa_cooperate.setAuthor2(authorDao.findById(son_idTofather_id.get(aa_cooperate.getAuthor2().getId())).get());
+            }
+        }
+        aa_cooperateDao.saveAll(aa_cooperates);
+        paperDao.saveAll(papers);
         logger.info("Done generate duplicate authors");
     }
 

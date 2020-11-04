@@ -65,7 +65,7 @@ class TSESpider(Spider):
             headers = {'User-Agent': 'Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)'}
             item=lunwenspiderItem()
             try:
-                res = requests.get(paper, headers=headers,timeout=120)
+                res = requests.get(paper, headers=headers,timeout=240)
             except Exception:
                 continue
             url=res.url
@@ -82,6 +82,11 @@ class TSESpider(Spider):
             else:
                 publication = 'unknown'
 
+            if 'publicationDate' in content:
+                time=content['publicationDate']
+            else:
+                time='unkown'
+
             if 'keywords' in content:
                 keywords = self.get_keywords(content['keywords'])
             else:
@@ -91,18 +96,21 @@ class TSESpider(Spider):
                 doi = content['doi']
             else:
                 doi = 'unknown'
+
+            lists=[]
             if 'authors' in content:
                 authors=content['authors']
-                author=""
                 for i in authors:
                     name=i['name']
                     if 'affiliation' in i:
                         affiliation=i['affiliation'][0]
                     else:
                         affiliation="unknow"
-                    author=author+name+'&&'+affiliation+"|"
-            else:
-                author=""
+                    author={
+                        "name":name,
+                        "affiliation":affiliation
+                    }
+                    lists.append(author)
 
             if 'abstract' in content:
                 abstract=content['abstract']
@@ -114,7 +122,8 @@ class TSESpider(Spider):
             item['publisher']=publication
             item['keyword']=keywords
             item['abstract']=abstract
-            item['author']=author
+            item['author']=lists
+            item['time']=time
             options = webdriver.ChromeOptions()
             # options.binary_location = GOOGLE
             options.add_argument('--headless')
@@ -130,17 +139,42 @@ class TSESpider(Spider):
                 time.sleep(5)
             except Exception:
                 pass
+            li = []
             try:
-                answer = ""
                 references = driver.find_element_by_id("references-section-container")
                 references = references.find_elements_by_class_name("reference-container")
                 for reference in references:
                     tmp = reference.find_elements_by_tag_name("span")
-                    text = tmp[1].get_attribute('innerText')
-                    answer = answer + text + "||"
+                    text = str(tmp[1].get_attribute('innerText'))
+                    if "\"" in text:
+                        parts = text.split(",")
+                        label = 0
+                        for i in range(0, len(parts)):
+                            if ("\"" in parts[i]):
+                                label = i
+                                break
+                        authors = []
+                        title = parts[label]
+                        for i in range(0, label):
+                            part = parts[i]
+                            if "et al" in part:
+                                part = part.replace("et al", "")
+                            if "and" in part:
+                                tmp = part.split("and")
+                                authors.append(tmp[0])
+                                authors.append(tmp[1])
+                            else:
+                                authors.append(part)
+                    else:
+                        continue
+                    a = {
+                        "title": title,
+                        "authors": authors
+                    }
+                    li.append(a)
             except Exception:
-                references = ""
-            item['references'] = answer
+                references = li
+            item['references'] = li
             yield item
             # yield Request(paper, meta={'item': item}, cookies=cookies, headers=headers, callback=self.paperParse)
 
@@ -162,15 +196,41 @@ class TSESpider(Spider):
             pass
         try:
             answer=""
+            li=[]
             references=driver.find_element_by_id("references-section-container")
             references=references.find_elements_by_class_name("reference-container")
             for reference in references:
                 tmp=reference.find_elements_by_tag_name("span")
-                text=tmp[1].get_attribute('innerText')
-                answer=answer+text+"||"
+                text=str(tmp[1].get_attribute('innerText'))
+                if "\"" in text:
+                    parts=text.split(",")
+                    label=0
+                    for i in range(0,len(parts)):
+                        if("\"" in parts[i]):
+                            label=i
+                            break
+                    authors=[]
+                    title=parts[label]
+                    for i in range(0,label):
+                        part=parts[i]
+                        if "et al" in part:
+                            part=part.replace("et al","")
+                        if "and" in part:
+                            tmp=part.split("and")
+                            authors.append(tmp[0])
+                            authors.append(tmp[1])
+                        else:
+                            authors.append(part)
+                else:
+                    continue
+                a={
+                    "title":title,
+                    "authors":authors
+                }
+                li.append(a)
         except Exception:
             references=""
-        item['references']=answer
+        item['references']=li
         yield  item
         # try:
         #     title=driver.find_element_by_class_name("document-title").text

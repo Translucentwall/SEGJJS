@@ -1,8 +1,9 @@
 package edu.nju.se.teamnamecannotbeempty.batch.job.worker;
 
-import edu.nju.se.teamnamecannotbeempty.data.domain.Affiliation;
-import edu.nju.se.teamnamecannotbeempty.data.domain.DuplicateAffiliation;
+import edu.nju.se.teamnamecannotbeempty.data.domain.*;
 import edu.nju.se.teamnamecannotbeempty.data.repository.AffiliationDao;
+import edu.nju.se.teamnamecannotbeempty.data.repository.AuthorAffiliationYearDao;
+import edu.nju.se.teamnamecannotbeempty.data.repository.PaperDao;
 import edu.nju.se.teamnamecannotbeempty.data.repository.duplication.DuplicateAffiliationDao;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.lucene.analysis.TokenStream;
@@ -15,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 
 @Component
@@ -22,14 +24,19 @@ public class AffiDupWorker {
     private final DuplicateAffiliationDao duplicateAffiliationDao;
     private final AffiliationDao affiliationDao;
     private final AffiPopWorker affiPopWorker;
+    private final PaperDao paperDao;
+    private final AuthorAffiliationYearDao authorAffiliationYearDao;
     private HashMap<Affiliation, HashSet<String>> tokenSetMap;
     private StandardAnalyzer analyzer;
 
+
     @Autowired
-    public AffiDupWorker(DuplicateAffiliationDao duplicateAffiliationDao, AffiliationDao affiliationDao, AffiPopWorker affiPopWorker) {
+    public AffiDupWorker(DuplicateAffiliationDao duplicateAffiliationDao, AffiliationDao affiliationDao, AffiPopWorker affiPopWorker,PaperDao paperDao,AuthorAffiliationYearDao authorAffiliationYearDao) {
+        this.authorAffiliationYearDao=authorAffiliationYearDao;
         this.duplicateAffiliationDao = duplicateAffiliationDao;
         this.affiliationDao = affiliationDao;
         this.affiPopWorker = affiPopWorker;
+        this.paperDao=paperDao;
     }
 
     @Async
@@ -73,6 +80,30 @@ public class AffiDupWorker {
         }
         analyzer.close();
         duplicateAffiliationDao.saveAll(dups);
+        Map<Long,Long> son_idTofather_id=new HashMap();
+        for(int i=0;i<dups.size();i++){
+            son_idTofather_id.put(dups.get(i).getSon().getId(),dups.get(i).getFather().getId());
+        }
+        List<Paper> papers=paperDao.findAll();
+        for(Paper paper : papers){
+            List<Author_Affiliation> author_affiliations=paper.getAa();
+            for(Author_Affiliation author_affiliation : author_affiliations){
+                Affiliation affiliation=author_affiliation.getAffiliation();
+                if(son_idTofather_id.containsKey(affiliation.getId())){
+                    author_affiliation.setAffiliation(affiliationDao.findById(son_idTofather_id.get(affiliation.getId())).get());
+                }
+            }
+            paper.setAa(author_affiliations);
+        }
+
+        List<AuthorAffiliationYear> authorAffiliationYears=authorAffiliationYearDao.findAll();
+        for(AuthorAffiliationYear authorAffiliationYear : authorAffiliationYears){
+            if(son_idTofather_id.containsKey(authorAffiliationYear.getAffiliation().getId())){
+                authorAffiliationYear.setAffiliation(affiliationDao.findById(son_idTofather_id.get(authorAffiliationYear.getAffiliation().getId())).get());
+            }
+        }
+        authorAffiliationYearDao.saveAll(authorAffiliationYears);
+        paperDao.saveAll(papers);
         logger.info("Done generate duplicate affiliations");
     }
 

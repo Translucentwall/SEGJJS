@@ -18,7 +18,7 @@ public interface TermDao extends JpaRepository<Term, Long> {
      * @param content 术语内容
      * @return Optional包装的术语对象
      * @前置条件 content不为null
-     * @后置条件 如果有与参数所给的string对应的数据，则Optional.get可获得该对象；否则Optional.isPresent==false
+     * @后置条件 如果有与参数所给的string对应的数据，则Optional.get可获得该 对象；否则Optional.isPresent==false
      */
     Optional<Term> findByContentIgnoreCase(String content);
 

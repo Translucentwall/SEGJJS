@@ -31,3 +31,5 @@ class lunwenspiderItem(scrapy.Item):
     doi = scrapy.Field()
     #出版商
     publisher= scrapy.Field()
+
+    time=scrapy.Field()

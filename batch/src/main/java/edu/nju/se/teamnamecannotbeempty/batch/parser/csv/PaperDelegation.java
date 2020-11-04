@@ -102,6 +102,7 @@ public class PaperDelegation {
         ak.removeIf(Objects::isNull);
         paper.setAuthor_keywords(ak);
 
+        
         paper.setCitation(citation == null ? Integer.valueOf(0) : citation);
         paper.setReference(reference == null ? Integer.valueOf(0) : reference);
         paper.setPublisher(publisher);
