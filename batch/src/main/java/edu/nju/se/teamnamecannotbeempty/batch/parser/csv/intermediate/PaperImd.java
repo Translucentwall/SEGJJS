@@ -117,6 +117,7 @@ public class PaperImd {
         paper.setTitle(title);
         paper.setDoi(doi);
         paper.setSummary(summary);
+        paper.setReference(references.size());
         int year=Integer.parseInt(time.split(" ")[1]);
         if(time!=null) {
             paper.setYear(year);

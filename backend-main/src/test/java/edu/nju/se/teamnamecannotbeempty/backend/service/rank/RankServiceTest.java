@@ -71,13 +71,9 @@ public class RankServiceTest {
         List<Author_Affiliation> author_affiliationList4 = Arrays.asList(aa2, aa3, aa4);
 
         Conference conference1 = new Conference();
-        conference1.setYear(2016);
         conference1.setName("MaLanShan");
-        conference1.setOrdno(3);
         Conference conference2 = new Conference();
-        conference2.setYear(2020);
         conference2.setName("MaLanShan");
-        conference2.setOrdno(7);
 
         Term term1 = new Term();
         term1.setContent("Lai");

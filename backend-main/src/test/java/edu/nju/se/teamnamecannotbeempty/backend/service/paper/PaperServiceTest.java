@@ -125,9 +125,6 @@ public class PaperServiceTest {
         when(paper1.getConference().getId()).thenReturn(1L);
         when(paper2.getConference().getId()).thenReturn(2L);
         when(paper3.getConference().getId()).thenReturn(3L);
-        when(paper1.getConference().getYear_highlight()).thenReturn("2121");
-        when(paper2.getConference().getYear_highlight()).thenReturn("2121");
-        when(paper3.getConference().getYear_highlight()).thenReturn("2121");
 
         when(paperPage.getContent()).thenReturn(Arrays.asList(paper1, paper2, paper3));
 
@@ -167,19 +164,11 @@ public class PaperServiceTest {
         paper.setTitle("Do You Want To Be More Beautiful?");
         paper.setAa(Arrays.asList(aa1, aa2));
         paper.setConference(getConference());
-        Date date = new Date();
-        paper.setDate_added_Xplore(date);
-        paper.setVolume(33);
-        paper.setStart_page(12);
-        paper.setEnd_page(23);
+
         paper.setSummary("I do not want to write test case!");
-        paper.setIssn("1001");
-        paper.setIsbn("1001");
         paper.setDoi("1001");
-        paper.setFunding_info("12138");
-        paper.setPdf_link(null);
         paper.setAuthor_keywords(termList);
-        paper.setMesh_terms(termList);
+
         paper.setCitation(1);
         paper.setReference(100);
         optionalPaper = Optional.of(paper);
@@ -187,12 +176,10 @@ public class PaperServiceTest {
         when(paperDao.findById(anyLong())).thenReturn(optionalPaper);
 
         List<String> keywords = Arrays.asList("Beauty", "Handsome");
-        Author_AffiliationVO author_affiliationVO1 = new Author_AffiliationVO("ZhenZhen",0L, new AffiliationVO("NJU", "NanJing",0L));
-        Author_AffiliationVO author_affiliationVO2 = new Author_AffiliationVO("PiaoLiang", 1L,new AffiliationVO("ZhengXingYiYuan", "TianTangDao", 1L));
+        Author_AffiliationVO author_affiliationVO1 = new Author_AffiliationVO("ZhenZhen",0L, new AffiliationVO("NJU", 0L));
+        Author_AffiliationVO author_affiliationVO2 = new Author_AffiliationVO("PiaoLiang", 1L,new AffiliationVO("ZhengXingYiYuan",1L));
         PaperVO paperVO = new PaperVO((long) 0, "Do You Want To Be More Beautiful?", Arrays.asList(author_affiliationVO1, author_affiliationVO2),
-                "GKD", 0L,2121, "99th", 12,
-                23, "I do not want to write test case!", "1001", null, keywords, new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>(), 1, 100, null, null);
+                "GKD", 0L,2121, null,null, keywords, 1, 100);
         ResponseVO responseVO = paperService.getPaper((long) 0);
         Assert.assertTrue(responseVO.isSuccess());
         Assert.assertEquals(paperVO, responseVO.getContent());
@@ -226,7 +213,6 @@ public class PaperServiceTest {
         Affiliation affiliation = new Affiliation();
         affiliation.setId(id);
         affiliation.setName(name);
-        affiliation.setCountry(country);
         return affiliation;
     }
 
@@ -234,8 +220,6 @@ public class PaperServiceTest {
         Conference conference = new Conference();
         conference.setId((long) 0);
         conference.setName("GKD");
-        conference.setYear(2121);
-        conference.setOrdno(99);
         return conference;
     }
 

@@ -38,8 +38,6 @@ public class PaperDaoTest {
         Conference conference = paper.getConference();
         assertNotNull(conference);
         assertEquals("ase", conference.getName());
-        assertEquals(1, conference.getOrdno().intValue());
-        assertEquals(2000, conference.getYear().intValue());
 
         List<Author_Affiliation> aa = paper.getAa();
         assertNotNull(aa);
@@ -51,8 +49,6 @@ public class PaperDaoTest {
         assertEquals(2, terms.size());
         terms.forEach(System.out::println);
 
-        assertNull(paper.getDocument_identifier());
-        assertNull(paper.getEnd_page());
 
         System.out.println(paper);
     }
@@ -80,61 +76,5 @@ public class PaperDaoTest {
         Paper paper = result.get();
         assertNotNull(paper.getAuthor_keywords());
         assertEquals(0, paper.getAuthor_keywords().size());
-    }
-
-    @Test
-    public void findByYears_allMatch_farFromBorder() {
-        List<Paper> papers = paperDao.findAllByConference_YearBetween(1000, 3000);
-        assertNotNull(papers);
-        assertEquals(3, papers.size());
-    }
-
-    @Test
-    public void findByYears_allMatch_LBorder() {
-        List<Paper> papers = paperDao.findAllByConference_YearBetween(2000, 3000);
-        assertNotNull(papers);
-        assertEquals(3, papers.size());
-    }
-
-    @Test
-    public void findByYears_allMatch_RBorder() {
-        List<Paper> papers = paperDao.findAllByConference_YearBetween(1000, 2032);
-        assertNotNull(papers);
-        assertEquals(3, papers.size());
-    }
-
-    @Test
-    public void findByYears_noMatch_farFromBorder() {
-        List<Paper> papers = paperDao.findAllByConference_YearBetween(2008, 2020);
-        assertNotNull(papers);
-        assertEquals(0, papers.size());
-    }
-
-    @Test
-    public void findByYears_partly_oneYear() {
-        List<Paper> papers = paperDao.findAllByConference_YearBetween(2000, 2000);
-        assertNotNull(papers);
-        assertEquals(2, papers.size());
-        papers.forEach(paper -> Assert.assertEquals(2000, paper.getConference().getYear().intValue()));
-    }
-
-    @Test
-    public void findByYears_fromGtTo() {
-        List<Paper> papers = paperDao.findAllByConference_YearBetween(3000, 2000);
-        assertNotNull(papers);
-    }
-
-    @Test(expected = InvalidDataAccessApiUsageException.class)
-    public void findByYears_oneNull() {
-        List<Paper> papers = paperDao.findAllByConference_YearBetween(1000, null);
-        assertNotNull(papers);
-        assertEquals(3, papers.size());
-    }
-
-    @Test(expected = InvalidDataAccessApiUsageException.class)
-    public void findByYears_allNull() {
-        List<Paper> papers = paperDao.findAllByConference_YearBetween(null, null);
-        assertNotNull(papers);
-        assertEquals(3, papers.size());
     }
 }

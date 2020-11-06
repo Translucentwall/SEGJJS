@@ -4,8 +4,11 @@ import edu.nju.se.teamnamecannotbeempty.data.domain.Paper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,9 +37,10 @@ public interface PaperDao extends JpaRepository<Paper, Long> {
     Page<Paper> findAll(Pageable pageable);
 
     /**
-     * @deprecated
+     * 获取全部论文
+     * @return 全部论文
      */
-    List<Paper> findAllByConference_YearBetween(Integer from, Integer to);
+    List<Paper> findAll();
 
     /**
      * 查找在给定会议年份（也即发表年份）区间内的论文
@@ -106,4 +110,14 @@ public interface PaperDao extends JpaRepository<Paper, Long> {
      */
     @Query("select p from Paper p where p.conference.id = ?1")
     List<Paper> findByConferenceID(Long id);
+
+    /**
+     * 给paper添加citation
+     * @param paper
+     * @return 是否更新成功
+     */
+    @Modifying
+    @Transactional
+    @Query("update Paper p set p.citation=:#{#paper.citation} where p.id=:#{#paper.id}")
+    int update(@Param("paper") Paper paper);
 }

@@ -18,7 +18,6 @@ public class DataRefresh {
         this.refreshJob = refreshJob;
     }
 
-    @Scheduled(cron = "0 0 4 * * ?")
     @CacheEvict(value = {"papersByYear", "getRank", "getPopRank","getAcademicEntity",
             "getBasicGraph","getCompleteGraph","getTermPopByPaperID", "getSignificantPaper",
             "getAllPapersByAuthor","getAllPapersByAffi","getAllPapersByConference"},

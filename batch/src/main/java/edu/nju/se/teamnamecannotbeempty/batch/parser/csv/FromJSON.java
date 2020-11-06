@@ -3,8 +3,6 @@ package edu.nju.se.teamnamecannotbeempty.batch.parser.csv;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.opencsv.bean.CsvToBeanBuilder;
 import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters.*;
 import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.intermediate.PaperImd;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Paper;
@@ -19,7 +17,7 @@ import java.io.InputStream;
 import java.util.*;
 
 @Component
-public class FromCSV {
+public class FromJSON {
     private final AuthorDao authorDao;
     private final AffiliationDao affiliationDao;
     private final TermDao termDao;
@@ -27,12 +25,12 @@ public class FromCSV {
     private final AA_CooperateDao aa_cooperateDao;
     private final AuthorAffiliationYearDao authorAffiliationYearDao;
 
-    private static final Logger logger = LoggerFactory.getLogger(FromCSV.class);
+    private static final Logger logger = LoggerFactory.getLogger(FromJSON.class);
 
     @Autowired
-    public FromCSV(AuthorDao authorDao, AffiliationDao affiliationDao,
-                   TermDao termDao, ConferenceDao conferenceDao,
-                   AA_CooperateDao aa_cooperateDao, AuthorAffiliationYearDao authorAffiliationYearDao) {
+    public FromJSON(AuthorDao authorDao, AffiliationDao affiliationDao,
+                    TermDao termDao, ConferenceDao conferenceDao,
+                    AA_CooperateDao aa_cooperateDao, AuthorAffiliationYearDao authorAffiliationYearDao) {
         this.authorDao = authorDao;
         this.affiliationDao = affiliationDao;
         this.termDao = termDao;

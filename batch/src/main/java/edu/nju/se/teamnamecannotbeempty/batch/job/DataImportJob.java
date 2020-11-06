@@ -2,7 +2,7 @@ package edu.nju.se.teamnamecannotbeempty.batch.job;
 
 import edu.nju.se.teamnamecannotbeempty.api.IDataImportJob;
 import edu.nju.se.teamnamecannotbeempty.batch.job.worker.*;
-import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.FromCSV;
+import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.FromJSON;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Paper;
 import edu.nju.se.teamnamecannotbeempty.data.repository.PaperDao;
 import org.slf4j.Logger;
@@ -20,17 +20,15 @@ import java.util.concurrent.Future;
 
 @Service
 public class DataImportJob implements IDataImportJob {
-    private final FromCSV fromCSV;
-    private final Attacher attacher;
+    private final FromJSON fromJSON;
     private final BatchGenerator batchGenerator;
     private final PaperDao paperDao;
 
     private static final Logger logger = LoggerFactory.getLogger(DataImportJob.class);
 
     @Autowired
-    public DataImportJob(FromCSV fromCSV, Attacher attacher, BatchGenerator batchGenerator, PaperDao paperDao) {
-        this.fromCSV = fromCSV;
-        this.attacher = attacher;
+    public DataImportJob(FromJSON fromJSON, BatchGenerator batchGenerator, PaperDao paperDao) {
+        this.fromJSON = fromJSON;
         this.batchGenerator = batchGenerator;
         this.paperDao=paperDao;
     }
@@ -56,7 +54,7 @@ public class DataImportJob implements IDataImportJob {
 
     private long readFile(String name, InputStream json) throws IOException {
         logger.info("Start import papers from " + name);
-        Collection<Paper> papers=fromCSV.convertJson(json);
+        Collection<Paper> papers= fromJSON.convertJson(json);
         long size = papers.size();
         try {
             json.close();
@@ -83,11 +81,12 @@ public class DataImportJob implements IDataImportJob {
         private final AuthorDupWorker authorDupWorker;
         private final AffiDupWorker affiDupWorker;
         private final EntityManager entityManager;
+        private final CitedWorker citedWorker;
 
         @Autowired
         public BatchGenerator(AuthorPopWorker authorPopWorker, AffiPopWorker affiPopWorker, TermPopWorker termPopWorker,
                               AuthorDupWorker authorDupWorker, AffiDupWorker affiDupWorker, PaperPopWorker paperPopWorker,
-                              EntityManager entityManager) {
+                              EntityManager entityManager, CitedWorker citedWorker) {
             this.authorPopWorker = authorPopWorker;
             this.affiPopWorker = affiPopWorker;
             this.termPopWorker = termPopWorker;
@@ -95,9 +94,11 @@ public class DataImportJob implements IDataImportJob {
             this.affiDupWorker = affiDupWorker;
             this.paperPopWorker = paperPopWorker;
             this.entityManager = entityManager;
+            this.citedWorker=citedWorker;
         }
 
         public void trigger_init(long total) {
+            citedWorker.generatePaperCitation();
             affiDupWorker.generateAffiDup();
             authorDupWorker.generateAuthorDup();
             long startTime = System.currentTimeMillis();

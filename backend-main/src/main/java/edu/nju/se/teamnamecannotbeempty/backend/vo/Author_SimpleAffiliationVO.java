@@ -49,11 +49,15 @@ public class Author_SimpleAffiliationVO{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Author_SimpleAffiliationVO that = (Author_SimpleAffiliationVO) o;
-        return authorId == that.authorId &&
-                affiliationId == that.affiliationId &&
+        return authorId.equals(that.authorId) &&
+                affiliationId.equals(that.affiliationId) &&
                 Objects.equals(author, that.author) &&
                 Objects.equals(affiliation, that.affiliation);
     }

@@ -3,6 +3,7 @@ package edu.nju.se.teamnamecannotbeempty.batch.job.worker;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Paper.Popularity;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Ref;
 import edu.nju.se.teamnamecannotbeempty.data.repository.PaperDao;
+import edu.nju.se.teamnamecannotbeempty.data.repository.RefDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +20,21 @@ import java.util.stream.Stream;
 public class PaperPopWorker {
     private static final ArrayList<Popularity> pops = new ArrayList<>();
     private final PaperDao paperDao;
+    private final RefDao refDao;
     private final JdbcTemplate jdbcTemplate;
     public static final Logger logger = LoggerFactory.getLogger(PaperPopWorker.class);
 
     @Autowired
-    public PaperPopWorker(PaperDao paperDao, JdbcTemplate jdbcTemplate) {
+    public PaperPopWorker(PaperDao paperDao, RefDao refDao, JdbcTemplate jdbcTemplate) {
         this.paperDao = paperDao;
+        this.refDao=refDao;
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void generatePaperPop() {
         int count = Math.toIntExact(count());
         pops.ensureCapacity(2 * count);
-        //TODO 获得ref的地方应为AddRef
-        Attacher.getRefs().parallelStream().filter(ref -> ref.getReferee() != null)
+        refDao.findAll().parallelStream().filter(ref -> ref.getReferee() != null)
                 .collect(Collectors.groupingBy(Ref::getReferee))
                 .forEach((referee, refs) ->
                         refs.stream().collect(
@@ -46,9 +48,9 @@ public class PaperPopWorker {
                             if (year != 0) {
                                 BigDecimal pop = BigDecimal.ZERO;
                                 for (Ref ref : yearlyRefs) {
-                                    //pop += 0.01 * referer's citation + 1.0
+                                    //pop += 1 * referer's citation + 1.0
                                     pop = pop.add(new BigDecimal(Double.toString(ref.getReferer().getCitation()))
-                                                    .multiply(new BigDecimal("0.01"))
+                                                    .multiply(new BigDecimal("1"))
                                                     .add(BigDecimal.ONE));
                                 }
                                 pops.add(new Popularity(referee, pop.doubleValue(), year));

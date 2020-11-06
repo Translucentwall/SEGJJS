@@ -39,7 +39,9 @@ public class PaperServiceImpl implements PaperService {
     @Override
     public List<SimplePaperVO> search(String text, String mode, Integer pageNumber,
                                       String sortMode, int perPage) {
-        if (pageNumber == null || pageNumber <= 0) pageNumber = 1;
+        if (pageNumber == null || pageNumber <= 0) {
+            pageNumber = 1;
+        }
         SearchMode searchMode = (SearchMode) AppContextProvider.getBean(mode);
         Pageable pageable = PageRequest.of(pageNumber - 1, perPage);
         SortMode sort = (SortMode) AppContextProvider.getBean(sortMode);
@@ -69,39 +71,19 @@ public class PaperServiceImpl implements PaperService {
             author_affiliationVOS.add(new Author_AffiliationVO(author_affiliation.getAuthor().getName(),
                     author_affiliation.getAuthor().getActual().getId(),
                     new AffiliationVO(author_affiliation.getAffiliation().getName(),
-                            author_affiliation.getAffiliation().getCountry(),
                             author_affiliation.getAffiliation().getActual().getId())));
         }
         List<Term> termList_keywords = paper.getAuthor_keywords();
-        List<Term> termList_IEEE = paper.getIeee_terms();
-        List<Term> termList_control = paper.getInspec_controlled();
-        List<Term> termList_noncontrol = paper.getInspec_non_controlled();
+
         List<String> keywords;
-        List<String> ieees;
-        List<String> controls;
-        List<String> noncontrols;
         keywords = termList_keywords.stream().map(Term::getContent).collect(Collectors.toList());
-        ieees = termList_IEEE.stream().map(Term::getContent).collect(Collectors.toList());
-        controls = termList_control.stream().map(Term::getContent).collect(Collectors.toList());
-        noncontrols = termList_noncontrol.stream().map(Term::getContent).collect(Collectors.toList());
-        String pdf = paper.getPdf_link();
+
 
         responseVO = ResponseVO.success();
         responseVO.setContent(new PaperVO(paper.getId(), paper.getTitle(),
                 author_affiliationVOS, paper.getConference().getName(),
                 paper.getConference().getId(), paper.getYear(),
-                assembleOrdno(paper.getConference().getOrdno()), paper.getStart_page(),
-                paper.getEnd_page(), paper.getSummary(), paper.getDoi(), pdf, keywords, ieees, controls,
-                noncontrols, paper.getCitation(), paper.getReference(),
-                paper.getPublisher(), paper.getDocument_identifier()));
+                paper.getSummary(), paper.getDoi(),keywords, paper.getCitation(), paper.getReference()));
         return responseVO;
-    }
-
-    private String assembleOrdno(Integer ordno) {
-        if (ordno == null) return null;
-        if (ordno == 1 || ordno % 10 == 1) return ordno + "st";
-        if (ordno == 2 || ordno % 10 == 2) return ordno + "nd";
-        if (ordno == 3 || ordno % 10 == 3) return ordno + "rd";
-        return ordno + "th";
     }
 }

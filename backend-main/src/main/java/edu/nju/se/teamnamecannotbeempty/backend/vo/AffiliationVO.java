@@ -5,13 +5,10 @@ import java.util.Objects;
 public class AffiliationVO {
     // 机构名，包括部门/院系名和组织/单位名（如软件学院of南京大学）
     private String name;
-    // 实际上是地理位置，最精确到市
-    private String country;
     private long id;
 
-    public AffiliationVO(String name, String country, long id) {
+    public AffiliationVO(String name, long id) {
         this.name = name;
-        this.country = country;
         this.id = id;
     }
 
@@ -23,13 +20,6 @@ public class AffiliationVO {
         this.name = name;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
 
     public long getId() {
         return id;
@@ -45,13 +35,12 @@ public class AffiliationVO {
         if (o == null || getClass() != o.getClass()) return false;
         AffiliationVO that = (AffiliationVO) o;
         return id == that.id &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(country, that.country);
+                Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(name, country, id);
+        return Objects.hash(name, id);
     }
 }

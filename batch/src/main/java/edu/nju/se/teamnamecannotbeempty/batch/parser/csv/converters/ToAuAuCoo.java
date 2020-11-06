@@ -2,7 +2,6 @@ package edu.nju.se.teamnamecannotbeempty.batch.parser.csv.converters;
 
 import edu.nju.se.teamnamecannotbeempty.batch.parser.csv.intermediate.AuAfCooImd;
 import edu.nju.se.teamnamecannotbeempty.data.domain.AA_Cooperate;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Author;
 
 import java.util.Collection;
 import java.util.HashMap;

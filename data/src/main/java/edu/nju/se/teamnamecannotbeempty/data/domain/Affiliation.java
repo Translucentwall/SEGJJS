@@ -20,8 +20,6 @@ public class Affiliation implements Aliasable<Affiliation> {
     // 机构名，包括部门/院系名和组织/单位名（如软件学院of南京大学）
     private String name;
     private String formattedName;
-    // 实际上是地理位置，最精确到市
-    private String country;
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_AFFI_ALIAS"))
     //别名，在需要去重的时候为空；去重后，如果没有重复为this，否则为重复对象
@@ -65,8 +63,12 @@ public class Affiliation implements Aliasable<Affiliation> {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Popularity that = (Popularity) o;
             return affiliation.equals(that.affiliation);
         }
@@ -120,8 +122,12 @@ public class Affiliation implements Aliasable<Affiliation> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Affiliation that = (Affiliation) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(alias, that.alias);
@@ -142,7 +148,6 @@ public class Affiliation implements Aliasable<Affiliation> {
         return "Affiliation{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", country='" + country + '\'' +
                 '}';
     }
 
@@ -170,14 +175,6 @@ public class Affiliation implements Aliasable<Affiliation> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public List<Popularity> getPops() {

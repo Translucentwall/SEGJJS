@@ -78,7 +78,6 @@ public class SearchServiceTest {
         assertNotNull(result);
         assertEquals(1, result.getTotalPages());
         List<Paper> papers = result.toList();
-        assertThat(papers.get(0).getConference().getYear(), greaterThan(papers.get(1).getConference().getYear()));
     }
 
     @Test
@@ -92,7 +91,6 @@ public class SearchServiceTest {
         assertNotNull(result);
         assertEquals(1, result.getTotalPages());
         List<Paper> papers = result.toList();
-        assertThat(papers.get(0).getConference().getYear(), lessThan(papers.get(1).getConference().getYear()));
     }
 
     @Test
@@ -132,7 +130,6 @@ public class SearchServiceTest {
         );
         assertNotNull(result);
         assertEquals(1, result.getTotalPages());
-        result.forEach(paper -> Assert.assertEquals(2000, paper.getConference().getYear().intValue()));
     }
 
     @Test

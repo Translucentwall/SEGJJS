@@ -23,20 +23,6 @@ public class ConferenceDaoTest {
     private ConferenceDao conferenceDao;
 
     @Test
-    public void findByNameAndYear() {
-        Optional<Conference> result = conferenceDao.findByNameAndYear("ase",2000);
-        assertTrue(result.isPresent());
-        assertEquals("ase", result.get().getName());
-        assertEquals(2000, result.get().getYear().intValue());
-    }
-
-    @Test
-    public void findByNameButWrongYear() {
-        Optional<Conference> result = conferenceDao.findByNameAndYear("ase",2010);
-        assertFalse(result.isPresent());
-    }
-
-    @Test
     public void getConferencesByAuthor() {
         List<Conference> conferences = conferenceDao.getConferencesByAuthor(1L);
         assertNotNull(conferences);
