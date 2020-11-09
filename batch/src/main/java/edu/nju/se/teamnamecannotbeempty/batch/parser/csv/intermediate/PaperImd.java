@@ -27,13 +27,15 @@ public class PaperImd {
     private List<String> keywords;
     @JSONField(name = "time")
     private String time;
+    @JSONField(name="citationCount")
+    private Integer citation;
 
     public PaperImd() {
     }
 
     public PaperImd(List<RefImd> references, String summary, String doi,
                     String title, String publisher, List<AuthorAffiImd> authorAffiImds,
-                    List<String> keywords, String time) {
+                    List<String> keywords, String time, Integer citation) {
         this.references = references;
         this.summary = summary;
         this.doi = doi;
@@ -42,6 +44,7 @@ public class PaperImd {
         this.authorAffiImds = authorAffiImds;
         this.keywords = keywords;
         this.time = time;
+        this.citation=citation;
     }
 
     public List<RefImd> getReferences() {
@@ -108,6 +111,14 @@ public class PaperImd {
         this.time = time;
     }
 
+    public Integer getCitation() {
+        return citation;
+    }
+
+    public void setCitation(Integer citation) {
+        this.citation = citation;
+    }
+
     /**
      * 将Paper中介对象转化为Paper，并产生相应的作者，机构，会议，研究方向对象
      * @return Paper
@@ -118,10 +129,13 @@ public class PaperImd {
         paper.setDoi(doi);
         paper.setSummary(summary);
         paper.setReference(references.size());
-        int year=Integer.parseInt(time.split(" ")[1]);
+        paper.setCitation(citation);
+        String[] timeStrings=time.split(" ");
+        int year=Integer.parseInt(timeStrings.length>2?timeStrings[2]:timeStrings[1]);
         if(time!=null) {
             paper.setYear(year);
         }
+
         List<Author_Affiliation> authorAffiliationList =new ArrayList<>();
         List<Author> authorList=new ArrayList<>();
         for(AuthorAffiImd authorAffiImd:authorAffiImds){

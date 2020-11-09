@@ -159,12 +159,17 @@ public class Paper {
             return false;
         }
         Paper paper = (Paper) o;
-        return doi != null && paper.doi != null && Objects.equals(doi, paper.doi);
+        if(doi!=null&&paper.doi!=null){
+            return Objects.equals(doi, paper.doi);
+        }else if(id!=null&&paper.id!=null){
+            return Objects.equals(id,paper.id);
+        }
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(doi == null ? UUID.randomUUID() : doi);
+        return Objects.hash(doi == null ? id==null? UUID.randomUUID() :id : doi);
     }
 
     /**

@@ -30,7 +30,8 @@ public class CitedWorker {
     public void generatePaperCitation(){
         List<Paper> paperList=paperDao.findAll();
         paperList.parallelStream().forEach(paper -> {
-            paper.setCitation(refDao.countRefsByReferee(paper));
+            int sum=paper.getCitation()==null?0:paper.getCitation();
+            paper.setCitation(sum+refDao.countRefsByReferee(paper));
             paperDao.update(paper);
         });
     }

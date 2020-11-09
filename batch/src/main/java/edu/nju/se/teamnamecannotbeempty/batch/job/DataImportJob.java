@@ -123,6 +123,7 @@ public class DataImportJob implements IDataImportJob {
             Future<?> genau = authorPopWorker.generateAuthorPop();
             Future<?> genaf = affiPopWorker.generateAffiPop();
             Future<?> genterm = termPopWorker.generateTermPop();
+
             while (!(genau.isDone() && genaf.isDone() && genterm.isDone())) {
                 try {
                     Thread.sleep(5000);

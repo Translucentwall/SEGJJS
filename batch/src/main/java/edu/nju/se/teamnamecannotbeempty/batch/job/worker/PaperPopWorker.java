@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.sql.JDBCType;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,9 +49,9 @@ public class PaperPopWorker {
                             if (year != 0) {
                                 BigDecimal pop = BigDecimal.ZERO;
                                 for (Ref ref : yearlyRefs) {
-                                    //pop += 1 * referer's citation + 1.0
+                                    //pop += 0.01 * referer's citation + 1.0
                                     pop = pop.add(new BigDecimal(Double.toString(ref.getReferer().getCitation()))
-                                                    .multiply(new BigDecimal("1"))
+                                                    .multiply(new BigDecimal("0.01"))
                                                     .add(BigDecimal.ONE));
                                 }
                                 pops.add(new Popularity(referee, pop.doubleValue(), year));
@@ -61,9 +62,10 @@ public class PaperPopWorker {
         ArrayList<Popularity> sumPop = new ArrayList<>(count);
         pops.parallelStream().collect(
                 Collectors.groupingBy(
-                        Popularity::getPaper,
-                        Collectors.summingDouble(Popularity::getPopularity)
-                )
+                            Popularity::getPaper,
+                            Collectors.summingDouble(Popularity::getPopularity)
+                    )
+
         ).forEach((paper, pop) -> sumPop.add(new Popularity(paper, (double) Math.round(pop * 100) / 100, null)));
         pops.addAll(sumPop);
 

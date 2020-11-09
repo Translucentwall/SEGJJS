@@ -18,6 +18,8 @@ public class RefImd {
     @JSONField(name = "title")
     private String title;
 
+    private static final char SPACE=' ';
+    private static final char DQUOTES='\"';
     public RefImd(List<String> authors, String title) {
         this.authors = authors;
         this.title = title;
@@ -35,7 +37,7 @@ public class RefImd {
     }
 
     public String getTitle() {
-        return title;
+        return transTitles(title);
     }
 
     public void setTitle(String title) {
@@ -44,7 +46,7 @@ public class RefImd {
 
     public Paper toPaper(){
         Paper paper=new Paper();
-        paper.setTitle(title);
+        paper.setTitle(transTitles(title));
         List<Author_Affiliation> authorAffiliationList =new ArrayList<>();
         for(String author:authors){
             authorAffiliationList.add(new Author_Affiliation(
@@ -52,5 +54,17 @@ public class RefImd {
         }
         paper.setAa(authorAffiliationList);
         return paper;
+    }
+
+    private  String transTitles(String title){
+        int begin=0, end=title.length()-1;
+        char[] chars=title.toCharArray();
+        while (chars[begin]==SPACE||chars[begin]==DQUOTES){
+            begin++;
+        }
+        while (chars[end]==SPACE||chars[end]==DQUOTES){
+            end--;
+        }
+        return end>=begin?title.substring(begin,end+1):title;
     }
 }

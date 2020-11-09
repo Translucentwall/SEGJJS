@@ -300,7 +300,9 @@ public class AcademicEntityFetch {
     }
 
     private List<YearlyTerm> getYearlyTermList(List<Paper> allPapers) {
-        Map<Integer, List<Paper>> paperByYear = allPapers.stream().distinct().collect(
+        Map<Integer, List<Paper>> paperByYear = allPapers.stream().distinct().
+                filter(paper -> paper.getDoi()!=null)
+                .collect(
                 Collectors.groupingBy(Paper::getYear));
         return paperByYear.entrySet().stream().map(
                 en -> new YearlyTerm(en.getKey(), en.getValue().stream().flatMap(

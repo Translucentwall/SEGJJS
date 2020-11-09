@@ -18,9 +18,9 @@ public class Ref {
     @JoinColumn(name = "referer_id", foreignKey = @ForeignKey(name = "FK_REFERER"))
     //引用者
     private Paper referer;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(500)")
     private String refTitle;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(500)")
     private String lowercaseTitle;
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "referee_id", foreignKey = @ForeignKey(name = "FK_REFEREE"))

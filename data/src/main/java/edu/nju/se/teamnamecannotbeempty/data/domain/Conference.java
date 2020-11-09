@@ -17,9 +17,6 @@ public class Conference {
     @Column(name = "c_name")
     private String name;
 
-//    @Transient
-//    private String year_highlight;
-
     public Conference() {
     }
 
@@ -63,12 +60,4 @@ public class Conference {
     public void setName(String name) {
         this.name = name;
     }
-
-//    public String getYear_highlight() {
-//        return year_highlight;
-//    }
-//
-//    public void setYear_highlight(String year_highlight) {
-//        this.year_highlight = year_highlight;
-//    }
 }

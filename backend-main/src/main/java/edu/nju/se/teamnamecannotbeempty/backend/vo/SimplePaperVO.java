@@ -102,9 +102,11 @@ public class SimplePaperVO {
         List<Author_SimpleAffiliationVO> author_simpleAffiliationVOS = new ArrayList<>();
         List<Author_Affiliation> author_affiliations = paper.getAa();
         for (Author_Affiliation author_affiliation : author_affiliations) {
-            author_simpleAffiliationVOS.add(new Author_SimpleAffiliationVO(author_affiliation.getAuthor().getName(),
-                    author_affiliation.getAuthor().getActual().getId(),author_affiliation.getAffiliation().getName(),
-                    author_affiliation.getAffiliation().getActual().getId()));
+            if(author_affiliation.getAuthor()!=null&&author_affiliation.getAffiliation()!=null) {
+                author_simpleAffiliationVOS.add(new Author_SimpleAffiliationVO(author_affiliation.getAuthor().getName(),
+                        author_affiliation.getAuthor().getActual().getId(), author_affiliation.getAffiliation().getName(),
+                        author_affiliation.getAffiliation().getActual().getId()));
+            }
         }
         List<String> keywords = new ArrayList<>();
         List<Term> termList = paper.getAuthor_keywords();

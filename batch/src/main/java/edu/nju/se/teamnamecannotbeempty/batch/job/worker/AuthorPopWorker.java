@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.JDBCType;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -55,7 +56,7 @@ public class AuthorPopWorker {
                 authorPops.add(new Author.Popularity(author, (double) Math.round(sum * 100) / 100, year))
         ));
         ArrayList<Author.Popularity> sumPops = new ArrayList<>(count);
-        authorPops.stream().collect(
+        authorPops.stream().filter(authorPop->authorPop.getAuthor()!=null).collect(
                 Collectors.groupingBy(
                         Author.Popularity::getAuthor,
                         Collectors.summingDouble(Author.Popularity::getPopularity)
@@ -64,9 +65,11 @@ public class AuthorPopWorker {
                 sumPops.add(new Author.Popularity(author, (double) Math.round(popSum * 100) / 100)));
         authorPops.addAll(sumPops);
 
+        List<Author.Popularity> finalAuthorPops=authorPops.stream().
+                filter(authorPop->authorPop.getAuthor()!=null).collect(Collectors.toList());
         jdbcTemplate.batchUpdate(
                 "insert author_popularity(id, popularity, year, author_id) VALUES (0,?,?,?)",
-                authorPops,
+                finalAuthorPops,
                 500,
                 (ps, argument) -> {
                     ps.setDouble(1, argument.getPopularity());
