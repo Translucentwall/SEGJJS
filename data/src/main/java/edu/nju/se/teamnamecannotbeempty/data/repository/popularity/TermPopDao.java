@@ -35,9 +35,9 @@ public interface TermPopDao extends JpaRepository<Term.Popularity, Long> {
 //            "where tp.term.id = pas.id and aa.author.id = ?1) and tp.year is null")
     @Query(nativeQuery = true,
             value = "SELECT distinct tp.id, tp.term_id, tp.popularity, tp.year " +
-                    "FROM se3.term_popularity tp " +
-                    "LEFT JOIN se3.papers_author_keywords pak ON pak.author_keywords_id = tp.term_id " +
-                    "LEFT JOIN se3.paper_aa aa ON pak.paper_id = aa.paper_id " +
+                    "FROM segjjs.term_popularity tp " +
+                    "LEFT JOIN segjjs.papers_author_keywords pak ON pak.author_keywords_id = tp.term_id " +
+                    "LEFT JOIN segjjs.paper_aa aa ON pak.paper_id = aa.paper_id " +
                     "WHERE tp.year IS NULL AND aa.author_id = ?1")
     List<Term.Popularity> getTermPopByAuthorID(Long id);
 
@@ -55,9 +55,9 @@ public interface TermPopDao extends JpaRepository<Term.Popularity, Long> {
 //            "where tp.term.id = pas.id and aa.affiliation.id = ?1) and tp.year is null")
     @Query(nativeQuery = true,
             value = "SELECT distinct tp.id, tp.term_id, tp.popularity, tp.year " +
-                    "FROM se3.term_popularity tp " +
-                    "LEFT JOIN se3.papers_author_keywords pak ON pak.author_keywords_id = tp.term_id " +
-                    "LEFT JOIN se3.paper_aa aa ON pak.paper_id = aa.paper_id " +
+                    "FROM segjjs.term_popularity tp " +
+                    "LEFT JOIN segjjs.papers_author_keywords pak ON pak.author_keywords_id = tp.term_id " +
+                    "LEFT JOIN segjjs.paper_aa aa ON pak.paper_id = aa.paper_id " +
                     "WHERE tp.year IS NULL AND aa.affiliation_id = ?1")
     List<Term.Popularity> getTermPopByAffiID(Long id);
 
@@ -74,8 +74,8 @@ public interface TermPopDao extends JpaRepository<Term.Popularity, Long> {
 //            "where tp.term.id = pas.id and p.id = ?1) and tp.year is null")
     @Query(nativeQuery = true,
             value = "SELECT distinct tp.id, tp.term_id, tp.popularity, tp.year " +
-                    "FROM se3.term_popularity tp " +
-                    "LEFT JOIN se3.papers_author_keywords pak ON pak.author_keywords_id = tp.term_id " +
+                    "FROM segjjs.term_popularity tp " +
+                    "LEFT JOIN segjjs.papers_author_keywords pak ON pak.author_keywords_id = tp.term_id " +
                     "WHERE tp.year IS NULL AND pak.paper_id = ?1")
     List<Term.Popularity> getTermPopByPaperID(Long id);
 
@@ -92,9 +92,9 @@ public interface TermPopDao extends JpaRepository<Term.Popularity, Long> {
 //            "where tp.term.id = pas.id and p.conference.id = ?1) and tp.year is null")
     @Query(nativeQuery = true,
             value = "SELECT distinct tp.id, tp.term_id, tp.popularity, tp.year " +
-                    "FROM se3.term_popularity tp " +
-                    "LEFT JOIN se3.papers_author_keywords pak ON pak.author_keywords_id = tp.term_id " +
-                    "LEFT JOIN se3.papers p ON pak.paper_id = p.id " +
+                    "FROM segjjs.term_popularity tp " +
+                    "LEFT JOIN segjjs.papers_author_keywords pak ON pak.author_keywords_id = tp.term_id " +
+                    "LEFT JOIN segjjs.papers p ON pak.paper_id = p.id " +
                     "WHERE tp.year IS NULL AND p.conference_id = ?1")
     List<Term.Popularity> getTermPopByConferenceID(Long id);
 

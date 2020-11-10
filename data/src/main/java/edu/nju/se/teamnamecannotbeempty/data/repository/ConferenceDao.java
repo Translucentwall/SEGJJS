@@ -21,9 +21,9 @@ public interface ConferenceDao extends JpaRepository<Conference, Long> {
      * @前置条件 id不为null
      * @后置条件 无
      */
-    @Query(value = "SELECT DISTINCT c.id, c.c_name FROM se3.papers p " +
-            "RIGHT JOIN se3.conferences c ON p.conference_id = c.id " +
-            "INNER JOIN se3.paper_aa aa ON p.id = aa.paper_id " +
+    @Query(value = "SELECT DISTINCT c.id, c.c_name FROM segjjs.papers p " +
+            "RIGHT JOIN segjjs.conferences c ON p.conference_id = c.id " +
+            "INNER JOIN segjjs.paper_aa aa ON p.id = aa.paper_id " +
             "WHERE aa.author_id = ?1", nativeQuery = true)
     List<Conference> getConferencesByAuthor(Long id);
 
@@ -35,9 +35,9 @@ public interface ConferenceDao extends JpaRepository<Conference, Long> {
      * @前置条件 id不为null
      * @后置条件 无
      */
-    @Query(value = "SELECT DISTINCT c.id, c.c_name FROM se3.papers p " +
-            "RIGHT JOIN se3.conferences c ON p.conference_id = c.id " +
-            "INNER JOIN se3.paper_aa aa ON p.id = aa.paper_id " +
+    @Query(value = "SELECT DISTINCT c.id, c.c_name FROM segjjs.papers p " +
+            "RIGHT JOIN segjjs.conferences c ON p.conference_id = c.id " +
+            "INNER JOIN segjjs.paper_aa aa ON p.id = aa.paper_id " +
             "WHERE aa.affiliation_id = ?1", nativeQuery = true)
     List<Conference> getConferencesByAffiliation(Long id);
 }

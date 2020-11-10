@@ -45,7 +45,7 @@ public interface PaperPopDao extends CrudRepository<Paper.Popularity, Long> {
      * @since 迭代三
      */
     @Query(nativeQuery = true,
-            value = "select pp.id, pp.paper_id, pp.popularity, pp.year from se3.paper_aa aa " +
+            value = "select pp.id, pp.paper_id, pp.popularity, pp.year from segjjs.paper_aa aa " +
                     "right join paper_popularity pp on aa.paper_id = pp.paper_id " +
                     "where aa.author_id = ?1 and pp.year is null " +
                     "order by pp.popularity desc")
@@ -67,7 +67,7 @@ public interface PaperPopDao extends CrudRepository<Paper.Popularity, Long> {
      * @since 迭代三
      */
     @Query(nativeQuery = true,
-            value = "select pp.id, pp.paper_id, pp.popularity, pp.year from se3.paper_aa aa " +
+            value = "select pp.id, pp.paper_id, pp.popularity, pp.year from segjjs.paper_aa aa " +
                     "right join paper_popularity pp on aa.paper_id = pp.paper_id " +
                     "where aa.affiliation_id = ?1 and pp.year is null " +
                     "order by pp.popularity desc")
@@ -129,9 +129,9 @@ public interface PaperPopDao extends CrudRepository<Paper.Popularity, Long> {
 //            "where exists (select 1 from p.aa aa where aa.author.id = ?1) and " +
 //            "exists (select 1 from p.author_keywords ak where ak.id = ?2) and pp.year is null")
     @Query(nativeQuery = true,
-            value = "SELECT coalesce(sum(pp.popularity),0) FROM se3.paper_popularity pp " +
-                    "left join se3.paper_aa aa on pp.paper_id = aa.paper_id " +
-                    "left join se3.papers_author_keywords pak on pp.paper_id = pak.paper_id " +
+            value = "SELECT coalesce(sum(pp.popularity),0) FROM segjjs.paper_popularity pp " +
+                    "left join segjjs.paper_aa aa on pp.paper_id = aa.paper_id " +
+                    "left join segjjs.papers_author_keywords pak on pp.paper_id = pak.paper_id " +
                     "where aa.author_id = ?1 and pak.author_keywords_id = ?2 and pp.year is null")
     Double getWeightByAuthorOnKeyword(Long authorId, Long keywordId);
 
@@ -148,9 +148,9 @@ public interface PaperPopDao extends CrudRepository<Paper.Popularity, Long> {
 //            "where exists (select 1 from p.aa aa where aa.affiliation.id = ?1) and " +
 //            "exists (select 1 from p.author_keywords ak where ak.id = ?2) and pp.year is null")
     @Query(nativeQuery = true,
-            value = "SELECT coalesce(sum(pp.popularity),0) FROM se3.paper_popularity pp " +
-                    "left join se3.paper_aa aa on pp.paper_id = aa.paper_id " +
-                    "left join se3.papers_author_keywords pak on pp.paper_id = pak.paper_id " +
+            value = "SELECT coalesce(sum(pp.popularity),0) FROM segjjs.paper_popularity pp " +
+                    "left join segjjs.paper_aa aa on pp.paper_id = aa.paper_id " +
+                    "left join segjjs.papers_author_keywords pak on pp.paper_id = pak.paper_id " +
                     "where aa.affiliation_id = ?1 and pak.author_keywords_id = ?2 and pp.year is null")
     Double getWeightByAffiOnKeyword(Long affiId, Long keywordId);
 
@@ -167,9 +167,9 @@ public interface PaperPopDao extends CrudRepository<Paper.Popularity, Long> {
 //            "where p.conference.id = ?1 and " +
 //            "exists (select 1 from p.author_keywords ak where ak.id = ?2) and pp.year is null")
     @Query(nativeQuery = true,
-            value = "SELECT coalesce(sum(pp.popularity),0) FROM se3.paper_popularity pp " +
-                    "left join se3.papers p on pp.paper_id = p.id " +
-                    "left join se3.papers_author_keywords pak on pp.paper_id = pak.paper_id " +
+            value = "SELECT coalesce(sum(pp.popularity),0) FROM segjjs.paper_popularity pp " +
+                    "left join segjjs.papers p on pp.paper_id = p.id " +
+                    "left join segjjs.papers_author_keywords pak on pp.paper_id = pak.paper_id " +
                     "where p.conference_id = ?1 and pak.author_keywords_id = ?2 and pp.year is null")
     Double getWeightByConferenceOnKeyword(Long cfrId, Long keywordId);
 }
