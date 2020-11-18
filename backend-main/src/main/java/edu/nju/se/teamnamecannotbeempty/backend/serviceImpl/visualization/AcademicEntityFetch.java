@@ -119,7 +119,7 @@ public class AcademicEntityFetch {
         List<YearlyAffiliation> yearlyAffiliationList=affiliationByYearList.stream().map(
                 affiliationByYear -> new YearlyAffiliation(affiliationByYear.getName(),
                         affiliationByYear.getYear(),affiliationByYear.getId())
-        ).sorted().collect(Collectors.toList());
+        ).sorted(Comparator.comparing(YearlyAffiliation::getYear)).collect(Collectors.toList());
 
         return new AcademicEntityVO(entityMsg.getAuthorType(), id,
                 authorDao.findById(id).orElseGet(Author::new).getActual().getName(),

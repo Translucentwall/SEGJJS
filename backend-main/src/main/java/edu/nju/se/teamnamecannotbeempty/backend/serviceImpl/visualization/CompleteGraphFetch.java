@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,8 @@ public class CompleteGraphFetch {
                 Author_Affiliation::getAuthor)).collect(Collectors.toList());
         List<Node> nodes = generateAuthorNode(authorList);
         List<Link> links = paperList.stream().flatMap(paper -> paper.getAa().stream()
+                .filter(Objects::nonNull)
+                .filter(author_affiliation -> author_affiliation.getAuthor()!=null)
                 .filter(author_affiliation -> id !=
                         author_affiliation.getAuthor().getActual().getId()).map(
                         author_affiliation -> new Link(paper.getId(), entityMsg.getPaperType(),
@@ -208,7 +211,7 @@ public class CompleteGraphFetch {
     }
 
     private List<Node> generateAuthorNode(List<Author> authors) {
-        return authors.stream().map(
+        return authors.stream().filter(Objects::nonNull).map(
                 author -> new Node(author.getActual().getId(), author.getActual().getName(),
                         entityMsg.getAuthorType()))
                 .collect(Collectors.toList());

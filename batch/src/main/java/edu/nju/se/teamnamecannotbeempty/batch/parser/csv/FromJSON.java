@@ -39,15 +39,18 @@ public class FromJSON {
         this.authorAffiliationYearDao=authorAffiliationYearDao;
     }
 
-    public Collection<Paper> convertJson(InputStream in) throws IOException {
-        int len;
-        StringBuilder sb=new StringBuilder();
-        byte[] bytes=new byte[1024];
-        while ((len=in.read(bytes))!=-1){
-            sb.append(new String(bytes,0,len));
+    public Collection<Paper> convertJson(List<InputStream> jsonList) throws IOException {
+        JSONArray jsonArray=new JSONArray();
+        for(InputStream in:jsonList) {
+            int len;
+            StringBuilder sb=new StringBuilder();
+            byte[] bytes=new byte[1024];
+            while ((len = in.read(bytes)) != -1) {
+                sb.append(new String(bytes, 0, len));
+            }
+            in.close();
+            jsonArray.addAll(JSONObject.parseArray(sb.toString()));
         }
-        in.close();
-        JSONArray jsonArray= JSONObject.parseArray(sb.toString());
         Iterator<Object> it=jsonArray.iterator();
         List<PaperImd> paperImdList=new ArrayList<>();
         Map<String, Paper> paperMap=new HashMap<>();

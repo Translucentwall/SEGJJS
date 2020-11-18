@@ -131,7 +131,8 @@ public class PaperImd {
         paper.setReference(references.size());
         paper.setCitation(citation);
         String[] timeStrings=time.split(" ");
-        int year=Integer.parseInt(timeStrings.length>2?timeStrings[2]:timeStrings[1]);
+        int year=Integer.parseInt(timeStrings.length>2?timeStrings[2]:
+                timeStrings.length>1?timeStrings[1]:timeStrings[0]);
         if(time!=null) {
             paper.setYear(year);
         }
@@ -141,6 +142,9 @@ public class PaperImd {
         for(AuthorAffiImd authorAffiImd:authorAffiImds){
             Author tempAuthor=ToAuthor.getAuthor(authorAffiImd.getAuthor());
             Affiliation tempAffi=ToAffiliation.getAffiliation(authorAffiImd.getAffiliation());
+            if(tempAuthor==null||tempAffi==null){
+                continue;
+            }
             authorList.add(tempAuthor);
             //生成作者机构年份
             ToAuAffiYear.saveAuthorAffiliationYear(new AuAffiYearImd(tempAuthor,tempAffi,year));

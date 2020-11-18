@@ -10,4 +10,8 @@ public class YearlyAffiliation {
         this.year = year;
         this.affId = affId;
     }
+
+    public int getYear() {
+        return year;
+    }
 }

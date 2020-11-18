@@ -10,7 +10,7 @@ public class ToAuthor{
 
     public static Author getAuthor(String name){
         name=name.trim();
-        if(name.isEmpty()) {
+        if(name.isEmpty()|| ".".equals(name)) {
             return null;
         }
         String lowercase = name.toLowerCase();

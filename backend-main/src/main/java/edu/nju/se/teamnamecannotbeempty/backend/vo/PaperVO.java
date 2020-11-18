@@ -22,7 +22,10 @@ public class PaperVO {
 
     private Integer endPage;
 
-    private String summary; //摘要，abstract重名了
+    /**
+     * 摘要，abstract重名了
+     */
+    private String summary;
 
     private String DOI;
 

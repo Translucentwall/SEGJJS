@@ -44,6 +44,11 @@ public class RefImd {
         this.title = title;
     }
 
+    public boolean isValidRef(){
+        return title!=null&&!"".equals(title.trim())&&
+                !"".equals(transTitles(title))&&authors.size()>0;
+    }
+
     public Paper toPaper(){
         Paper paper=new Paper();
         paper.setTitle(transTitles(title));
@@ -57,12 +62,16 @@ public class RefImd {
     }
 
     private  String transTitles(String title){
+        if(title==null) {
+            return null;
+        }
+        title=title.trim();
         int begin=0, end=title.length()-1;
         char[] chars=title.toCharArray();
-        while (chars[begin]==SPACE||chars[begin]==DQUOTES){
+        while (begin<title.length()&&(chars[begin]==SPACE||chars[begin]==DQUOTES)){
             begin++;
         }
-        while (chars[end]==SPACE||chars[end]==DQUOTES){
+        while (end>=0&&(chars[end]==SPACE||chars[end]==DQUOTES)){
             end--;
         }
         return end>=begin?title.substring(begin,end+1):title;

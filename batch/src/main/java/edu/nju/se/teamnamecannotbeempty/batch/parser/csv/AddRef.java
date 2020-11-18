@@ -18,6 +18,9 @@ public class AddRef {
             List<RefImd> refImdList=paperImd.getReferences();
             Paper paper=paperMap.get(paperImd.getTitle());
             for(RefImd refImd:refImdList){
+                if(!refImd.isValidRef()){
+                    continue;
+                }
                 Ref ref=new Ref(refImd.getTitle());
                 Paper newPaper=paperMap.get(refImd.getTitle());
                 if(newPaper==null){

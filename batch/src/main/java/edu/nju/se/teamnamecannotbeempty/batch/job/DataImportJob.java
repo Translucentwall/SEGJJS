@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Future;
 
 @Service
@@ -40,10 +43,14 @@ public class DataImportJob implements IDataImportJob {
 
         try {
 
-            InputStream tse_json= getClass().getResourceAsStream("/datasource/tse.json");
+            ArrayList<InputStream> jsonList=new ArrayList<>();
+            jsonList.add(getClass().getResourceAsStream("/datasource/tse.json"));
+            jsonList.add(getClass().getResourceAsStream("/datasource/toplas.json"));
+            jsonList.add(getClass().getResourceAsStream("/datasource/ieee_journals.json"));
+
 
             String name = "all together";
-            total=readFile(name,tse_json);
+            total=readFile(name,jsonList);
 
             batchGenerator.trigger_init(total);
         } catch (Exception e) {
@@ -52,12 +59,14 @@ public class DataImportJob implements IDataImportJob {
         return total;
     }
 
-    private long readFile(String name, InputStream json) throws IOException {
+    private long readFile(String name, List<InputStream> jsonList) throws IOException {
         logger.info("Start import papers from " + name);
-        Collection<Paper> papers= fromJSON.convertJson(json);
+        Collection<Paper> papers= fromJSON.convertJson(jsonList);
         long size = papers.size();
         try {
-            json.close();
+            for (InputStream inputStream : jsonList) {
+                inputStream.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

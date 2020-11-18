@@ -80,9 +80,10 @@ public class PaperServiceImpl implements PaperService {
 
 
         responseVO = ResponseVO.success();
+        //TODO 疑似getConference()报错了
         responseVO.setContent(new PaperVO(paper.getId(), paper.getTitle(),
-                author_affiliationVOS, paper.getConference().getName(),
-                paper.getConference().getId(), paper.getYear(),
+                author_affiliationVOS, null,
+                null, paper.getYear(),
                 paper.getSummary(), paper.getDoi(),keywords, paper.getCitation(), paper.getReference()));
         return responseVO;
     }
