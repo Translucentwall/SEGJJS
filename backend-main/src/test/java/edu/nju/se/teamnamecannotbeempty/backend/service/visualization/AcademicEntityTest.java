@@ -87,7 +87,7 @@ public class AcademicEntityTest {
         paper.setAa(new ArrayList<>());paper.setAuthor_keywords(new ArrayList<>());
         Paper.Popularity paperPop = new Paper.Popularity(); paperPop.setPaper(paper);
 
-        when(affiliationDao.getAffiliationsByAuthor(anyLong())).thenReturn(Arrays.asList(affiliation1,affiliation2,affiliation3));
+        when(affiliationDao.getAffiliationsWithPopByAuthor(anyLong())).thenReturn(Arrays.asList(affiliation1,affiliation2,affiliation3));
         when(affiliationDao.getAffiliationsByConference(anyLong())).thenReturn(Arrays.asList(affiliation1,affiliation2,affiliation3));
         when(conferenceDao.getConferencesByAuthor(anyLong())).thenReturn(Arrays.asList(conference1,conference2,conference3));
         when(conferenceDao.getConferencesByAffiliation(anyLong())).thenReturn(Arrays.asList(conference1,conference2,conference3));

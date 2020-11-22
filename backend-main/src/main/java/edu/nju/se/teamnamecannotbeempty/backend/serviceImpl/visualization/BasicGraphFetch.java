@@ -53,19 +53,25 @@ public class BasicGraphFetch {
 
     @Cacheable(value = "getBasicGraph", key = "#p0+'_'+#p1", unless = "#result=null")
     public GraphVO getBasicGraph(long id, int type) {
-        if (type == entityMsg.getAuthorType()) return authorBasicGraph(id);
-        else if (type == entityMsg.getAffiliationType()) return affiliationBasicGraph(id);
-        else if (type == entityMsg.getConferenceType()) return conferenceBasicGraph(id);
-        else if (type == entityMsg.getTermType()) return termBasicGraph(id);
-        else return null;
+        if (type == entityMsg.getAuthorType()) {
+            return authorBasicGraph(id);
+        } else if (type == entityMsg.getAffiliationType()) {
+            return affiliationBasicGraph(id);
+        } else if (type == entityMsg.getConferenceType()) {
+            return conferenceBasicGraph(id);
+        } else if (type == entityMsg.getTermType()) {
+            return termBasicGraph(id);
+        } else {
+            return null;
+        }
     }
 
     private GraphVO authorBasicGraph(long id) {
         List<Paper> paperList = fetchForCache.getAllPapersByAuthor(id);
         List<Node> nodes = generatePaperNode(paperList);
         //去NA
-        List<Affiliation> affiliationList = affiliationDao.getAffiliationsByAuthor(id).stream()
-                .filter(affiliation -> !affiliation.getActual().getName().equals("NA")).
+        List<Affiliation> affiliationList = affiliationDao.getAffiliationsWithPopByAuthor(id).stream()
+                .filter(affiliation -> !affiliation.getName().equals("NA")).
                         collect(Collectors.toList());
 
         nodes.addAll(generateAffiliationNode(affiliationList));
@@ -80,7 +86,7 @@ public class BasicGraphFetch {
                                 entityMsg.getTermType(), paperPop.getPopularity()))).
                 collect(Collectors.toList());
         links.addAll(links1);
-        String centerName = authorDao.findById(id).orElseGet(Author::new).getActual().getName();
+        String centerName = authorDao.findById(id).orElseGet(Author::new).getName();
         Node centerNode = new Node(id, centerName, entityMsg.getAuthorType());
         nodes.add(centerNode);
         nodes.forEach(node -> node.setPopularity(addPopInNode(node)));
@@ -98,15 +104,15 @@ public class BasicGraphFetch {
         nodes.addAll(generateTermNode(termPopularityList));
         links.addAll(generateLinksWithWeightInAffi(id, termPopularityList));
         List<Link> links1 = authors.stream().flatMap(author ->
-                termPopDao.getTermPopByAuthorID(author.getActual().getId()).stream()
+                termPopDao.getTermPopByAuthorID(author.getId()).stream()
                         .filter(termPop -> termIsBelongToAffiliation(termPop.getTerm().getId(), id))
-                        .map(termPop -> new Link(author.getActual().getId(),
+                        .map(termPop -> new Link(author.getId(),
                                 entityMsg.getAuthorType(), termPop.getTerm().getId(),
                                 entityMsg.getTermType(), paperPopDao.getWeightByAuthorOnKeyword(
-                                author.getActual().getId(), termPop.getTerm().getId()))))
+                                author.getId(), termPop.getTerm().getId()))))
                 .collect(Collectors.toList());
         links.addAll(links1);
-        String centerName = affiliationDao.findById(id).orElseGet(Affiliation::new).getActual().getName();
+        String centerName = affiliationDao.findById(id).orElseGet(Affiliation::new).getName();
         Node centerNode = new Node(id, centerName, entityMsg.getAffiliationType());
         nodes.add(centerNode);
         nodes.forEach(node -> node.setPopularity(addPopInNode(node)));
@@ -138,13 +144,13 @@ public class BasicGraphFetch {
 
         List<Link> links = papers.stream().flatMap(paper -> paper.getAa().stream().map(
                 author_affiliation -> new Link(paper.getId(), entityMsg.getPaperType(),
-                        author_affiliation.getAuthor().getActual().getId(),
+                        author_affiliation.getAuthor().getId(),
                         entityMsg.getAuthorType(), -1.0)
         )).collect(Collectors.toList());
 
         List<Link> links1 = authors.stream().map(author -> new Link(id, entityMsg.getTermType(),
-                author.getActual().getId(), entityMsg.getAuthorType(),
-                paperPopDao.getWeightByAuthorOnKeyword(author.getActual().getId(), id)))
+                author.getId(), entityMsg.getAuthorType(),
+                paperPopDao.getWeightByAuthorOnKeyword(author.getId(), id)))
                 .collect(Collectors.toList());
         links.addAll(links1);
 
@@ -190,7 +196,7 @@ public class BasicGraphFetch {
 
     private List<Node> generateAuthorNode(List<Author> authors) {
         return authors.stream().map(
-                author -> new Node(author.getActual().getId(), author.getActual().getName(),
+                author -> new Node(author.getId(), author.getName(),
                         entityMsg.getAuthorType())).collect(Collectors.toList());
     }
 
@@ -210,8 +216,8 @@ public class BasicGraphFetch {
 
     private List<Node> generateAffiliationNode(List<Affiliation> affiliations) {
         return affiliations.stream().map(
-                affiliation -> new Node(affiliation.getActual().getId(),
-                        affiliation.getActual().getName(), entityMsg.getAffiliationType()))
+                affiliation -> new Node(affiliation.getId(),
+                        affiliation.getName(), entityMsg.getAffiliationType()))
                 .collect(Collectors.toList());
     }
 
@@ -225,16 +231,24 @@ public class BasicGraphFetch {
         double pop = -1.0;
         if (node.getEntityType() == entityMsg.getAuthorType()) {
             Optional<Author.Popularity> authorPop = authorPopDao.findByAuthor_Id(node.getEntityId());
-            if (authorPop.isPresent()) pop = authorPop.get().getPopularity();
+            if (authorPop.isPresent()) {
+                pop = authorPop.get().getPopularity();
+            }
         } else if (node.getEntityType() == entityMsg.getAffiliationType()) {
             Optional<Affiliation.Popularity> affiPop = affiPopDao.findByAffiliation_Id(node.getEntityId());
-            if (affiPop.isPresent()) pop = affiPop.get().getPopularity();
+            if (affiPop.isPresent()) {
+                pop = affiPop.get().getPopularity();
+            }
         } else if (node.getEntityType() == entityMsg.getPaperType()) {
             Optional<Paper.Popularity> paperPop = paperPopDao.getByPaper_Id(node.getEntityId());
-            if (paperPop.isPresent()) pop = paperPop.get().getPopularity();
+            if (paperPop.isPresent()) {
+                pop = paperPop.get().getPopularity();
+            }
         } else if (node.getEntityType() == entityMsg.getTermType()) {
             Optional<Term.Popularity> termPop = termPopDao.getDistinctByTerm_Id(node.getEntityId());
-            if (termPop.isPresent()) pop = termPop.get().getPopularity();
+            if (termPop.isPresent()) {
+                pop = termPop.get().getPopularity();
+            }
         }
         return pop;
     }

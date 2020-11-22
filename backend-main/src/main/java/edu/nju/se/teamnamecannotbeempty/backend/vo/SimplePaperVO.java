@@ -104,8 +104,8 @@ public class SimplePaperVO {
         for (Author_Affiliation author_affiliation : author_affiliations) {
             if(author_affiliation.getAuthor()!=null&&author_affiliation.getAffiliation()!=null) {
                 author_simpleAffiliationVOS.add(new Author_SimpleAffiliationVO(author_affiliation.getAuthor().getName(),
-                        author_affiliation.getAuthor().getActual().getId(), author_affiliation.getAffiliation().getName(),
-                        author_affiliation.getAffiliation().getActual().getId()));
+                        author_affiliation.getAuthor().getId(), author_affiliation.getAffiliation().getName(),
+                        author_affiliation.getAffiliation().getId()));
             }
         }
         List<String> keywords = new ArrayList<>();

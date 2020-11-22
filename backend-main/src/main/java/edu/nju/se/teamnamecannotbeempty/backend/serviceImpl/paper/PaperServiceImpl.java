@@ -8,6 +8,7 @@ import edu.nju.se.teamnamecannotbeempty.backend.service.search.SearchService;
 import edu.nju.se.teamnamecannotbeempty.backend.service.search.SortMode;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.*;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Author_Affiliation;
+import edu.nju.se.teamnamecannotbeempty.data.domain.Conference;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Paper;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Term;
 import edu.nju.se.teamnamecannotbeempty.data.repository.PaperDao;
@@ -65,26 +66,30 @@ public class PaperServiceImpl implements PaperService {
             return responseVO;
         }
         Paper paper = optionalPaper.get();
-        List<Author_AffiliationVO> author_affiliationVOS = new ArrayList<>();
-        List<Author_Affiliation> author_affiliations = paper.getAa();
-        for (Author_Affiliation author_affiliation : author_affiliations) {
-            author_affiliationVOS.add(new Author_AffiliationVO(author_affiliation.getAuthor().getName(),
-                    author_affiliation.getAuthor().getActual().getId(),
-                    new AffiliationVO(author_affiliation.getAffiliation().getName(),
-                            author_affiliation.getAffiliation().getActual().getId())));
+        List<Author_AffiliationVO> authorAffiliationVOS = new ArrayList<>();
+        List<Author_Affiliation> authorAffiliations = paper.getAa();
+        for (Author_Affiliation authorAffiliation : authorAffiliations) {
+            authorAffiliationVOS.add(new Author_AffiliationVO(authorAffiliation.getAuthor().getName(),
+                    authorAffiliation.getAuthor().getId(),
+                    new AffiliationVO(authorAffiliation.getAffiliation().getName(),
+                            authorAffiliation.getAffiliation().getId())));
         }
-        List<Term> termList_keywords = paper.getAuthor_keywords();
+        List<Term> termListKeywords = paper.getAuthor_keywords();
 
         List<String> keywords;
-        keywords = termList_keywords.stream().map(Term::getContent).collect(Collectors.toList());
+        keywords = termListKeywords.stream().map(Term::getContent).collect(Collectors.toList());
 
-
+        PaperVO paperVO=new PaperVO(paper.getId(), paper.getTitle(),
+                authorAffiliationVOS, paper.getYear_highlight(),
+                paper.getSummary(), paper.getDoi(),keywords, paper.getCitation(),
+                paper.getReference());
+        Conference conference;
+        if((conference=paper.getConference())!=null){
+            paperVO.setConferenceId(conference.getId());
+            paperVO.setConferenceTitle(conference.getName());
+        }
         responseVO = ResponseVO.success();
-        //TODO 疑似getConference()报错了
-        responseVO.setContent(new PaperVO(paper.getId(), paper.getTitle(),
-                author_affiliationVOS, null,
-                null, paper.getYear(),
-                paper.getSummary(), paper.getDoi(),keywords, paper.getCitation(), paper.getReference()));
+        responseVO.setContent(paperVO);
         return responseVO;
     }
 }

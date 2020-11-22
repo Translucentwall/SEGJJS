@@ -123,14 +123,14 @@ public class RankFetch {
         List<Affiliation> affiliationList = paperList.stream().flatMap(paper ->
                 paper.getAa().stream().filter(author_affiliation ->
                 (!"".equals(author_affiliation.getAffiliation().getName())
-                        && !"NA".equals(author_affiliation.getAffiliation().getActual().getName())))
+                        && !"NA".equals(author_affiliation.getAffiliation().getName())))
                 .collect(Collectors.collectingAndThen(Collectors.toCollection(() ->
                         new TreeSet<>(Comparator.comparing(a ->
-                                a.getAffiliation().getActual().getName()))), ArrayList::new)).stream()
+                                a.getAffiliation().getName()))), ArrayList::new)).stream()
                 .map(Author_Affiliation::getAffiliation)).collect(Collectors.toList());
         Map<String, Long> affiliationPaperNums = affiliationList.stream()
                 .collect(Collectors.groupingBy(affiliation ->
-                        affiliation.getActual().getName(), Collectors.counting()));
+                        affiliation.getName(), Collectors.counting()));
         return mapToList(affiliationPaperNums);
     }
 
@@ -157,9 +157,9 @@ public class RankFetch {
         return paperList.stream().
                 flatMap(paper -> paper.getAa().stream().filter(
                         author_affiliation -> !"".equals(
-                                author_affiliation.getAuthor().getActual().getName()))
+                                author_affiliation.getAuthor().getName()))
                         .map(author_affiliation -> new AuthorPaperCitationNum(
-                                author_affiliation.getAuthor().getActual().getName(),
+                                author_affiliation.getAuthor().getName(),
                                 paper.getCitation())))
                 .collect(Collectors.toList());
     }
@@ -173,16 +173,16 @@ public class RankFetch {
     private List<PopRankItem> authorPopRank() {
         List<Author.Popularity> authorPops = authorPopDao.findTop20ByOrderByPopularityDesc();
         return authorPops.stream().map(authorPop ->
-                new PopRankItem(authorPop.getAuthor().getActual().getId(),
-                        authorPop.getAuthor().getActual().getName(), authorPop.getPopularity()))
+                new PopRankItem(authorPop.getAuthor().getId(),
+                        authorPop.getAuthor().getName(), authorPop.getPopularity()))
                 .collect(Collectors.toList());
     }
 
     private List<PopRankItem> affiliationPopRank() {
         List<Affiliation.Popularity> affiPops = affiPopDao.findTop20ByOrderByPopularityDesc();
         return affiPops.stream().map(affiPop ->
-                new PopRankItem(affiPop.getAffiliation().getActual().getId(),
-                        affiPop.getAffiliation().getActual().getName(), affiPop.getPopularity()))
+                new PopRankItem(affiPop.getAffiliation().getId(),
+                        affiPop.getAffiliation().getName(), affiPop.getPopularity()))
                 .collect(Collectors.toList());
     }
 

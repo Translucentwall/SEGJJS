@@ -179,7 +179,7 @@ public class PaperServiceTest {
         Author_AffiliationVO author_affiliationVO1 = new Author_AffiliationVO("ZhenZhen",0L, new AffiliationVO("NJU", 0L));
         Author_AffiliationVO author_affiliationVO2 = new Author_AffiliationVO("PiaoLiang", 1L,new AffiliationVO("ZhengXingYiYuan",1L));
         PaperVO paperVO = new PaperVO((long) 0, "Do You Want To Be More Beautiful?", Arrays.asList(author_affiliationVO1, author_affiliationVO2),
-                "GKD", 0L,2121, null,null, keywords, 1, 100);
+                "2121","GKD" , null, keywords, 1, 100);
         ResponseVO responseVO = paperService.getPaper((long) 0);
         Assert.assertTrue(responseVO.isSuccess());
         Assert.assertEquals(paperVO, responseVO.getContent());

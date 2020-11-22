@@ -1,6 +1,7 @@
 package edu.nju.se.teamnamecannotbeempty.data.repository;
 
 import edu.nju.se.teamnamecannotbeempty.data.domain.Affiliation;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -32,7 +33,7 @@ public interface AffiliationDao extends JpaRepository<Affiliation, Long> {
     Optional<Affiliation> findById(Long id);
 
     /**
-     * 用作者id查询作者在过的机构（指在机构下发表过论文），根据活跃度倒序排序
+     * 用作者id查询作者在过的机构（指在机构下发表过论文），并且这些机构存在热度
      *
      * @param id 作者的id
      * @return 作者在过的机构
@@ -43,7 +44,19 @@ public interface AffiliationDao extends JpaRepository<Affiliation, Long> {
             value = "select distinct affiliations.id, af_name, formatted_name, alias_id from affiliations " +
                     "inner join paper_aa on affiliations.id = paper_aa.affiliation_id " +
                     "inner join affi_popularity ap on affiliations.id = ap.affiliation_id " +
-                    "where paper_aa.author_id = ?1 order by popularity desc")
+                    "where paper_aa.author_id = ?1")
+    List<Affiliation> getAffiliationsWithPopByAuthor(Long id);
+
+    /**
+     * 用作者id查询作者在过的机构（指在机构下发表过论文）
+     *
+     * @param id 作者的id
+     * @return 作者在过的机构
+     * @前置条件 id不为null
+     * @后置条件 无
+     */
+    @Query("select distinct aa.affiliation from Paper p "+
+            "inner join p.aa aa on aa.author.id=?1")
     List<Affiliation> getAffiliationsByAuthor(Long id);
 
     /**

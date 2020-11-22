@@ -78,7 +78,7 @@ public class BasicGraphTest {
         Term.Popularity termPop = new Term.Popularity();
         termPop.setTerm(term1);
         when(paperPopDao.findTopPapersByAuthorId(1L)).thenReturn(Collections.singletonList(paperPop));
-        when(affiliationDao.getAffiliationsByAuthor(1L)).thenReturn(Collections.singletonList(affiliation1));
+        when(affiliationDao.getAffiliationsWithPopByAuthor(1L)).thenReturn(Collections.singletonList(affiliation1));
         when(termPopDao.getTermPopByAuthorID(1L)).thenReturn(Collections.singletonList(termPop));
         when(fetchForCache.getTermPopByPaperID(1L)).thenReturn(Collections.singletonList(termPop));
         when(paperPopDao.getWeightByAuthorOnKeyword(1L,1L)).thenReturn(1.0);

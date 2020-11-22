@@ -38,7 +38,7 @@ public class AffiliationDaoTest {
 
     @Test
     public void getAffiliationsByAuthor() {
-        List<Affiliation> affiliations = affiliationDao.getAffiliationsByAuthor(1L);
+        List<Affiliation> affiliations = affiliationDao.getAffiliationsWithPopByAuthor(1L);
         assertNotNull(affiliations);
         assertEquals(1, affiliations.size());
         assertEquals(1L, affiliations.get(0).getId().longValue());

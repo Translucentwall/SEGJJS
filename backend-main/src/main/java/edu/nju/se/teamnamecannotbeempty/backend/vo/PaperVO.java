@@ -1,63 +1,42 @@
 package edu.nju.se.teamnamecannotbeempty.backend.vo;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PaperVO {
-    private long id;
+    private Long id;
 
     private String title;
 
-    private List<Author_AffiliationVO> author_affiliationVOS;
+    private List<Author_AffiliationVO> authorAffiliationVOS;
 
-
-    private String publicationTitle; // 会议
+    private String conferenceTitle;
 
     private Long conferenceId;
 
-    private Integer publicationYear;
-
-    private String ordno;
-
-    private Integer startPage;
-
-    private Integer endPage;
-
+    private String year;
     /**
      * 摘要，abstract重名了
      */
     private String summary;
 
-    private String DOI;
-
-    private String PDFLink;
+    private String doi;
 
     private List<String> authorKeywords;
-
-    private List<String> IEEETerms;
-
-    private List<String> controlledTerms;
-
-    private List<String> nonControlledTerms;
 
     private Integer citationCount;
 
     private Integer referenceCount;
 
-    private String publisher;
-
-    private String identifier;
-
-    public PaperVO(long id, String title, List<Author_AffiliationVO> author_affiliationVOS, String publicationTitle,
-                   Long conferenceId, Integer publicationYear, String summary, String DOI, List<String> authorKeywords,
+    public PaperVO(long id, String title, List<Author_AffiliationVO> authorAffiliationVOS,
+                   String year, String summary, String doi, List<String> authorKeywords,
                    Integer citationCount, Integer referenceCount) {
         this.id = id;
         this.title = title;
-        this.author_affiliationVOS = author_affiliationVOS;
-        this.publicationTitle = publicationTitle;
-        this.conferenceId = conferenceId;
-        this.publicationYear = publicationYear;
+        this.authorAffiliationVOS = authorAffiliationVOS;
+        this.year=year;
         this.summary = summary;
-        this.DOI = DOI;
+        this.doi = doi;
         this.authorKeywords = authorKeywords;
         this.citationCount = citationCount;
         this.referenceCount = referenceCount;
@@ -79,20 +58,12 @@ public class PaperVO {
         this.title = title;
     }
 
-    public List<Author_AffiliationVO> getAuthor_affiliationVOS() {
-        return author_affiliationVOS;
+    public List<Author_AffiliationVO> getAuthorAffiliationVOS() {
+        return authorAffiliationVOS;
     }
 
-    public void setAuthor_affiliationVOS(List<Author_AffiliationVO> author_affiliationVOS) {
-        this.author_affiliationVOS = author_affiliationVOS;
-    }
-
-    public String getPublicationTitle() {
-        return publicationTitle;
-    }
-
-    public void setPublicationTitle(String publicationTitle) {
-        this.publicationTitle = publicationTitle;
+    public void setAuthorAffiliationVOS(List<Author_AffiliationVO> authorAffiliationVOS) {
+        this.authorAffiliationVOS = authorAffiliationVOS;
     }
 
     public Long getConferenceId() {
@@ -103,60 +74,12 @@ public class PaperVO {
         this.conferenceId = conferenceId;
     }
 
-    public Integer getPublicationYear() {
-        return publicationYear;
-    }
-
-    public void setPublicationYear(Integer publicationYear) {
-        this.publicationYear = publicationYear;
-    }
-
-    public String getOrdno() {
-        return ordno;
-    }
-
-    public void setOrdno(String ordno) {
-        this.ordno = ordno;
-    }
-
-    public Integer getStartPage() {
-        return startPage;
-    }
-
-    public void setStartPage(Integer startPage) {
-        this.startPage = startPage;
-    }
-
-    public Integer getEndPage() {
-        return endPage;
-    }
-
-    public void setEndPage(Integer endPage) {
-        this.endPage = endPage;
-    }
-
-    public String getSummary() {
+     public String getSummary() {
         return summary;
     }
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public String getDOI() {
-        return DOI;
-    }
-
-    public void setDOI(String DOI) {
-        this.DOI = DOI;
-    }
-
-    public String getPDFLink() {
-        return PDFLink;
-    }
-
-    public void setPDFLink(String PDFLink) {
-        this.PDFLink = PDFLink;
     }
 
     public List<String> getAuthorKeywords() {
@@ -167,31 +90,7 @@ public class PaperVO {
         this.authorKeywords = authorKeywords;
     }
 
-    public List<String> getIEEETerms() {
-        return IEEETerms;
-    }
-
-    public void setIEEETerms(List<String> IEEETerms) {
-        this.IEEETerms = IEEETerms;
-    }
-
-    public List<String> getControlledTerms() {
-        return controlledTerms;
-    }
-
-    public void setControlledTerms(List<String> controlledTerms) {
-        this.controlledTerms = controlledTerms;
-    }
-
-    public List<String> getNonControlledTerms() {
-        return nonControlledTerms;
-    }
-
-    public void setNonControlledTerms(List<String> nonControlledTerms) {
-        this.nonControlledTerms = nonControlledTerms;
-    }
-
-    public Integer getCitationCount() {
+     public Integer getCitationCount() {
         return citationCount;
     }
 
@@ -207,36 +106,60 @@ public class PaperVO {
         this.referenceCount = referenceCount;
     }
 
-    public String getPublisher() {
-        return publisher;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
+    public String getConferenceTitle() {
+        return conferenceTitle;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public void setConferenceTitle(String conferenceTitle) {
+        this.conferenceTitle = conferenceTitle;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public String getYear() {
+        return year;
     }
 
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getDoi() {
+        return doi;
+    }
+
+    public void setDoi(String doi) {
+        this.doi = doi;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof PaperVO)) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        return id == ((PaperVO) o).getId() && title.equals(((PaperVO) o).getTitle()) && author_affiliationVOS.equals(((PaperVO) o).getAuthor_affiliationVOS())
-                && publicationTitle.equals(((PaperVO) o).getPublicationTitle()) && publicationYear.equals(((PaperVO) o).getPublicationYear())
-                && startPage.equals(((PaperVO) o).getStartPage()) && endPage.equals(((PaperVO) o).endPage) && summary.equals(((PaperVO) o).getSummary())
-                && DOI.equals(((PaperVO) o).getDOI()) && ((PDFLink == null && ((PaperVO) o).getPDFLink() == null) || PDFLink.equals(((PaperVO) o).getPDFLink())) && authorKeywords.equals(((PaperVO) o).getAuthorKeywords())
-                && IEEETerms.equals(((PaperVO) o).getIEEETerms()) && controlledTerms.equals(((PaperVO) o).getControlledTerms())
-                && nonControlledTerms.equals(((PaperVO) o).getNonControlledTerms()) && citationCount.equals(((PaperVO) o).getCitationCount())
-                && referenceCount.equals(((PaperVO) o).getReferenceCount()) && ((publisher == null && ((PaperVO) o).getPublisher() == null) || publisher.equals(((PaperVO) o).getPublisher()))
-                && ((identifier == null && ((PaperVO) o).getIdentifier() == null) || identifier.equals(((PaperVO) o).getIdentifier())) && ((ordno == null && ((PaperVO) o).getOrdno() == null) || ordno.equals(((PaperVO) o).getOrdno()));
+        PaperVO paperVO = (PaperVO) o;
+        return Objects.equals(id, paperVO.id) &&
+                Objects.equals(title, paperVO.title) &&
+                Objects.equals(authorAffiliationVOS, paperVO.authorAffiliationVOS) &&
+                Objects.equals(conferenceTitle, paperVO.conferenceTitle) &&
+                Objects.equals(conferenceId, paperVO.conferenceId) &&
+                Objects.equals(year, paperVO.year) &&
+                Objects.equals(summary, paperVO.summary) &&
+                Objects.equals(doi, paperVO.doi) &&
+                Objects.equals(authorKeywords, paperVO.authorKeywords) &&
+                Objects.equals(citationCount, paperVO.citationCount) &&
+                Objects.equals(referenceCount, paperVO.referenceCount);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, authorAffiliationVOS,
+                conferenceTitle, conferenceId, year, summary, doi,
+                authorKeywords, citationCount, referenceCount);
     }
 }

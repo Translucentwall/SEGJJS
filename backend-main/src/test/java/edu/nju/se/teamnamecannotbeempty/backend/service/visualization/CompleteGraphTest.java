@@ -81,7 +81,7 @@ public class CompleteGraphTest {
         Author_Affiliation author_affiliation3 = new Author_Affiliation(); author_affiliation3.setAuthor(author3);
         paper.setAa(Arrays.asList(author_affiliation1,author_affiliation2,author_affiliation3));
         Affiliation affiliation1 = new Affiliation(); affiliation1.setId(1L); affiliation1.setName("affiliation1");
-        when(affiliationDao.getAffiliationsByAuthor(1L)).thenReturn(Collections.singletonList(affiliation1));
+        when(affiliationDao.getAffiliationsWithPopByAuthor(1L)).thenReturn(Collections.singletonList(affiliation1));
         when(authorDao.getAuthorsByAffiliation(1L)).thenReturn(Arrays.asList(author1,author3,author4));
         Term term1 = new Term(); term1.setContent("term1"); term1.setId(1L);
         Term.Popularity termPop = new Term.Popularity(); termPop.setTerm(term1);
@@ -127,7 +127,7 @@ public class CompleteGraphTest {
         Affiliation affiliation1 = new Affiliation(); affiliation1.setId(1L); affiliation1.setName("affiliation1");
         Author_Affiliation aa1 = new Author_Affiliation(); aa1.setAuthor(author1); aa1.setAffiliation(affiliation1);
         paper.setAa(Collections.singletonList(aa1));
-        when(affiliationDao.getAffiliationsByAuthor(1L)).thenReturn(Collections.singletonList(affiliation1));
+        when(affiliationDao.getAffiliationsWithPopByAuthor(1L)).thenReturn(Collections.singletonList(affiliation1));
         when(paperPopDao.findTopPapersByConferenceId(1L)).thenReturn(Collections.singletonList(paperPop));
 
         GraphVO graphVO=completeGraphFetch.getCompleteGraph(1L,3);
