@@ -1,5 +1,7 @@
 package edu.nju.se.teamnamecannotbeempty.backend.vo;
 
+import edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.visualization.KeywordsYear;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +18,7 @@ public class AcademicEntityVO {
     private List<SimplePaperVO> significantPapers;
     //以空格隔开的字符串，n个数字，第一个数字是年份
     private String popTrend;
+    private List<KeywordsYear> keywordsYears;
     List<YearlyAffiliation> yearlyAffiliationList;
 
 
@@ -23,7 +26,7 @@ public class AcademicEntityVO {
                             List<AcademicEntityItem> authors, List<AcademicEntityItem> affiliations,
                             List<AcademicEntityItem> conferences, List<TermItem> terms,
                             List<SimplePaperVO> significantPapers, List<YearlyTerm> yearlyTerms,
-                            String popTrend, List<YearlyAffiliation> yearlyAffiliationList) {
+                            String popTrend, List<YearlyAffiliation> yearlyAffiliationList, List<KeywordsYear> keywordsYears) {
         this.type = type;
         this.id = id;
         this.name = name;
@@ -36,6 +39,7 @@ public class AcademicEntityVO {
         this.yearlyTerms = yearlyTerms;
         this.popTrend = popTrend;
         this.yearlyAffiliationList=yearlyAffiliationList;
+        this.keywordsYears=keywordsYears;
     }
 
     public int getType() {
@@ -124,6 +128,14 @@ public class AcademicEntityVO {
 
     public void setPopTrend(String popTrend) {
         this.popTrend = popTrend;
+    }
+
+    public List<KeywordsYear> getKeywordsYears() {
+        return keywordsYears;
+    }
+
+    public void setKeywordsYears(List<KeywordsYear> keywordsYears) {
+        this.keywordsYears = keywordsYears;
     }
 
     @Override

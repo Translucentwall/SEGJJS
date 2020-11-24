@@ -33,3 +33,4 @@ class lunwenspiderItem(scrapy.Item):
     publisher= scrapy.Field()
 
     time=scrapy.Field()
+    citationCount=scrapy.Field()

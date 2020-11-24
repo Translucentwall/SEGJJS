@@ -76,7 +76,10 @@ class TSESpider(Spider):
                 title = content['title']
             else:
                 title = 'unknown'
-
+            if 'citationCount' in content:
+                citationCount=content['citationCount']
+            else:
+                citationCount=0
             if 'publicationTitle' in content:
                 publication = content['publicationTitle']
             else:
@@ -124,6 +127,7 @@ class TSESpider(Spider):
             item['abstract']=abstract
             item['author']=lists
             item['time']=time
+            item['citationCount']=citationCount
             options = webdriver.ChromeOptions()
             # options.binary_location = GOOGLE
             options.add_argument('--headless')

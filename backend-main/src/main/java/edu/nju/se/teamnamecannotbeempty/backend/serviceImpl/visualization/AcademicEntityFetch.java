@@ -76,6 +76,38 @@ public class AcademicEntityFetch {
         List<Paper> allPapers = fetchForCache.getAllPapersByAuthor(id);
         List<YearlyTerm> yearlyTerms = getYearlyTermList(allPapers);
 
+        //获取关键词
+        Map<Integer,KeywordsYear> year_keywords=new HashMap();
+        for(int i=0;i<allPapers.size();i++){
+            Paper paper=allPapers.get(i);
+            Integer year=paper.getYear();
+            List<Term> terms=paper.getAuthor_keywords();
+            List<String> keywords=new ArrayList<>();
+            for(int j=0;j<terms.size();j++){
+                keywords.add(terms.get(i).getContent());
+            }
+            if(year_keywords.containsKey(year))
+                year_keywords.get(year).addKeywords(keywords);
+            else
+                year_keywords.put(year,new KeywordsYear(year,keywords));
+        }
+        List<KeywordsYear> keywordsYears=new ArrayList<>();
+        for(Integer key:year_keywords.keySet()){
+            keywordsYears.add(year_keywords.get(key));
+        }
+        List<String> keywordPre=new ArrayList<>();
+        String finalkeyword="";
+        Integer value=0;
+        for(KeywordsYear keywordsYear:keywordsYears){
+            if(keywordsYear.getCount(keywordsYear.getKeyword())>value){
+                value=keywordsYear.getCount(keywordsYear.getKeyword());
+                finalkeyword=keywordsYear.getKeyword();
+            }
+        }
+        keywordPre.add(finalkeyword);
+        keywordsYears.add(new KeywordsYear(2021,keywordPre));
+
+
         //生成代表作
         List<SimplePaperVO> simplePaperVOS = allPapers.stream().map(
                 SimplePaperVO::new).collect(Collectors.toList());
@@ -106,7 +138,7 @@ public class AcademicEntityFetch {
         return new AcademicEntityVO(entityMsg.getAuthorType(), id,
                 authorDao.findById(id).orElseGet(Author::new).getName(),
                 sumCitation, null, affiEntityItems, conferenceEntityItems, termItems,
-                simplePaperVOS, yearlyTerms, popTrend,yearlyAffiliationList);
+                simplePaperVOS, yearlyTerms, popTrend,yearlyAffiliationList,keywordsYears);
     }
 
     private AcademicEntityVO affiliationEntity(long id) {
@@ -156,7 +188,7 @@ public class AcademicEntityFetch {
         return new AcademicEntityVO(entityMsg.getAffiliationType(), id, affiliationDao.findById(id).
                 orElseGet(Affiliation::new).getName(),
                 sumCitation, authorEntityItems, null, conferenceEntityItems, termItems,
-                simplePaperVOS, yearlyTerms, popTrend,null);
+                simplePaperVOS, yearlyTerms, popTrend,null,null);
     }
 
     private AcademicEntityVO conferenceEntity(long id) {
@@ -190,7 +222,7 @@ public class AcademicEntityFetch {
         return new AcademicEntityVO(entityMsg.getConferenceType(), id, conferenceDao.findById(id).
                 orElseGet(Conference::new).getName(), -1,
                 authorEntityItems, affiEntityItems, null, termItems, simplePaperVOS,
-                yearlyTerms, null,null);
+                yearlyTerms, null,null,null);
     }
 
     private List<AcademicEntityItem> generateAuthorEntityItems(List<Author> authors) {
