@@ -19,7 +19,7 @@ public class AcademicEntityVO {
     //以空格隔开的字符串，n个数字，第一个数字是年份
     private String popTrend;
     private List<KeywordsYear> keywordsYears;
-    List<YearlyAffiliation> yearlyAffiliationList;
+    private List<YearlyAffiliation> yearlyAffiliationList;
 
 
     public AcademicEntityVO(int type, long id, String name, int refSum,
@@ -136,6 +136,14 @@ public class AcademicEntityVO {
 
     public void setKeywordsYears(List<KeywordsYear> keywordsYears) {
         this.keywordsYears = keywordsYears;
+    }
+
+    public List<YearlyAffiliation> getYearlyAffiliationList() {
+        return yearlyAffiliationList;
+    }
+
+    public void setYearlyAffiliationList(List<YearlyAffiliation> yearlyAffiliationList) {
+        this.yearlyAffiliationList = yearlyAffiliationList;
     }
 
     @Override

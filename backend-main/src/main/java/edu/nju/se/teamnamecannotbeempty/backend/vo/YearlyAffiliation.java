@@ -11,7 +11,27 @@ public class YearlyAffiliation {
         this.affId = affId;
     }
 
+    public String getAffName() {
+        return affName;
+    }
+
+    public void setAffName(String affName) {
+        this.affName = affName;
+    }
+
     public int getYear() {
         return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public long getAffId() {
+        return affId;
+    }
+
+    public void setAffId(long affId) {
+        this.affId = affId;
     }
 }

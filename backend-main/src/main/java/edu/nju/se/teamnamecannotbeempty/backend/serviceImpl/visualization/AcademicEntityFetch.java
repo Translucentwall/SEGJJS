@@ -84,7 +84,7 @@ public class AcademicEntityFetch {
             List<Term> terms=paper.getAuthor_keywords();
             List<String> keywords=new ArrayList<>();
             for(int j=0;j<terms.size();j++){
-                keywords.add(terms.get(i).getContent());
+                keywords.add(terms.get(j).getContent());
             }
             if(year_keywords.containsKey(year))
                 year_keywords.get(year).addKeywords(keywords);
@@ -98,12 +98,12 @@ public class AcademicEntityFetch {
         List<String> keywordPre=new ArrayList<>();
         String finalkeyword="";
         Integer value=0;
-        for(KeywordsYear keywordsYear:keywordsYears){
-            if(keywordsYear.getCount(keywordsYear.getKeyword())>value){
-                value=keywordsYear.getCount(keywordsYear.getKeyword());
-                finalkeyword=keywordsYear.getKeyword();
-            }
-        }
+//        for(KeywordsYear keywordsYear:keywordsYears){
+//            if((keywordsYear.getCount(keywordsYear.getKeyword()))>value){
+//                value=keywordsYear.getCount(keywordsYear.getKeyword());
+//                finalkeyword=keywordsYear.getKeyword();
+//            }
+//        }
         keywordPre.add(finalkeyword);
         keywordsYears.add(new KeywordsYear(2021,keywordPre));
 
