@@ -165,7 +165,8 @@ class TSESpider(Spider):
                                 part = part.replace("et al", "")
                             if "and" in part:
                                 tmp = part.split("and")
-                                authors.append(tmp[0])
+                                if(len(tmp[0])>1):
+                                    authors.append(tmp[0])
                                 authors.append(tmp[1])
                             else:
                                 authors.append(part)

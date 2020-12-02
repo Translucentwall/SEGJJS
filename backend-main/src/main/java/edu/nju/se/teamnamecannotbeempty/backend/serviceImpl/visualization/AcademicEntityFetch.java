@@ -1,6 +1,7 @@
 package edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.visualization;
 
 import edu.nju.se.teamnamecannotbeempty.backend.config.parameter.EntityMsg;
+import edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.paper.TitleAndId;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.*;
 import edu.nju.se.teamnamecannotbeempty.data.data_transfer.AffiliationByYear;
 import edu.nju.se.teamnamecannotbeempty.data.domain.*;
@@ -26,12 +27,13 @@ public class AcademicEntityFetch {
     private final PaperPopDao paperPopDao;
     private final TermDao termDao;
     private final FetchForCache fetchForCache;
+    private final RefDao refDao;
 
     @Autowired
     public AcademicEntityFetch(AffiliationDao affiliationDao, AuthorDao authorDao, ConferenceDao conferenceDao,
                                PaperDao paperDao, EntityMsg entityMsg,
                                TermPopDao termPopDao, PaperPopDao paperPopDao, TermDao termDao,
-                               FetchForCache fetchForCache) {
+                               FetchForCache fetchForCache,RefDao refDao) {
         this.affiliationDao = affiliationDao;
         this.authorDao = authorDao;
         this.conferenceDao = conferenceDao;
@@ -41,6 +43,7 @@ public class AcademicEntityFetch {
         this.paperPopDao = paperPopDao;
         this.termDao = termDao;
         this.fetchForCache = fetchForCache;
+        this.refDao=refDao;
     }
 
     @Cacheable(value = "getAcademicEntity", key = "#p0+'_'+#p1")
@@ -76,6 +79,10 @@ public class AcademicEntityFetch {
         List<Paper> allPapers = fetchForCache.getAllPapersByAuthor(id);
         List<YearlyTerm> yearlyTerms = getYearlyTermList(allPapers);
 
+        //生成引用和被引用关系
+        List<TitleAndId> refers=getRefers(allPapers);
+        List<TitleAndId> referees=getReferees(allPapers);
+
         //获取关键词
         Map<Integer,KeywordsYear> year_keywords=new HashMap();
         for(int i=0;i<allPapers.size();i++){
@@ -98,12 +105,12 @@ public class AcademicEntityFetch {
         List<String> keywordPre=new ArrayList<>();
         String finalkeyword="";
         Integer value=0;
-//        for(KeywordsYear keywordsYear:keywordsYears){
-//            if((keywordsYear.getCount(keywordsYear.getKeyword()))>value){
-//                value=keywordsYear.getCount(keywordsYear.getKeyword());
-//                finalkeyword=keywordsYear.getKeyword();
-//            }
-//        }
+        for(KeywordsYear keywordsYear:keywordsYears){
+            if((keywordsYear.getCount())>value){
+                value=keywordsYear.getCount();
+                finalkeyword=keywordsYear.getKeyword();
+            }
+        }
         keywordPre.add(finalkeyword);
         keywordsYears.add(new KeywordsYear(2021,keywordPre));
 
@@ -138,7 +145,7 @@ public class AcademicEntityFetch {
         return new AcademicEntityVO(entityMsg.getAuthorType(), id,
                 authorDao.findById(id).orElseGet(Author::new).getName(),
                 sumCitation, null, affiEntityItems, conferenceEntityItems, termItems,
-                simplePaperVOS, yearlyTerms, popTrend,yearlyAffiliationList,keywordsYears);
+                simplePaperVOS, yearlyTerms, popTrend,yearlyAffiliationList,keywordsYears,refers,referees);
     }
 
     private AcademicEntityVO affiliationEntity(long id) {
@@ -351,5 +358,37 @@ public class AcademicEntityFetch {
         double getPop() {
             return pop;
         }
+    }
+
+    private List<TitleAndId> getRefers(List<Paper> papers){
+        List<TitleAndId> answer=new ArrayList<TitleAndId>();
+        for(Paper paper:papers){
+            List<Ref> refs=paper.getRefs();
+            for(Ref ref:refs){
+                Paper tmp=ref.getReferee();
+                List<Author_Affiliation> author_affiliations=tmp.getAa();
+                for(Author_Affiliation author_affiliation:author_affiliations){
+                    Author author=author_affiliation.getAuthor();
+                    answer.add(new TitleAndId(author.getName(),author.getId()));
+                }
+            }
+        }
+        return answer;
+    }
+
+    private List<TitleAndId> getReferees(List<Paper> papers){
+        List<TitleAndId> answer=new ArrayList<TitleAndId>();
+        for(Paper paper:papers){
+            List<Ref> refs=refDao.findByReferee_Id(paper.getId());
+            for(Ref ref:refs){
+                Paper tmp=ref.getReferee();
+                List<Author_Affiliation> author_affiliations=tmp.getAa();
+                for(Author_Affiliation author_affiliation:author_affiliations){
+                    Author author=author_affiliation.getAuthor();
+                    answer.add(new TitleAndId(author.getName(),author.getId()));
+                }
+            }
+        }
+        return answer;
     }
 }

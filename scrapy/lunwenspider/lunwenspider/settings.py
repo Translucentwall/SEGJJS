@@ -10,7 +10,7 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'lunwenspider'
-# DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 1
 SPIDER_MODULES = ['lunwenspider.spiders']
 NEWSPIDER_MODULE = 'lunwenspider.spiders'
 AUTOTHROTTLE_TARGET_CONCURRENCY=100

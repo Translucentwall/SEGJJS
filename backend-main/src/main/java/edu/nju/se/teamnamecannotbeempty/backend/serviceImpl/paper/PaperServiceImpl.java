@@ -7,17 +7,16 @@ import edu.nju.se.teamnamecannotbeempty.backend.service.search.SearchMode;
 import edu.nju.se.teamnamecannotbeempty.backend.service.search.SearchService;
 import edu.nju.se.teamnamecannotbeempty.backend.service.search.SortMode;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.*;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Author_Affiliation;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Conference;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Paper;
-import edu.nju.se.teamnamecannotbeempty.data.domain.Term;
+import edu.nju.se.teamnamecannotbeempty.data.domain.*;
 import edu.nju.se.teamnamecannotbeempty.data.repository.PaperDao;
+import edu.nju.se.teamnamecannotbeempty.data.repository.RefDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,12 +28,14 @@ public class PaperServiceImpl implements PaperService {
     private final SearchService searchService;
     private final PaperDao paperDao;
     private final PaperMsg paperMsg;
+    private final RefDao refDao;
 
     @Autowired
-    public PaperServiceImpl(PaperDao paperDao, PaperMsg paperMsg, SearchService searchService) {
+    public PaperServiceImpl(PaperDao paperDao, PaperMsg paperMsg, SearchService searchService,RefDao refDao) {
         this.paperDao = paperDao;
         this.paperMsg = paperMsg;
         this.searchService = searchService;
+        this.refDao=refDao;
     }
 
     @Override
@@ -74,6 +75,19 @@ public class PaperServiceImpl implements PaperService {
                     new AffiliationVO(authorAffiliation.getAffiliation().getName(),
                             authorAffiliation.getAffiliation().getId())));
         }
+        List<Ref> refs=paper.getRefs();
+        List<TitleAndId> refers=new ArrayList<>();
+        for(Ref ref:refs){
+            Paper tmp=ref.getReferee();
+            refers.add(new TitleAndId(tmp.getTitle(),tmp.getId()));
+        }
+        List<Ref> refees=refDao.findByReferee_Id(paper.getId());
+        List<TitleAndId> referees=new ArrayList<>();
+        for(Ref ref:refees){
+            Paper tmp=ref.getReferee();
+            referees.add(new TitleAndId(tmp.getTitle(),tmp.getId()));
+        }
+
         List<Term> termListKeywords = paper.getAuthor_keywords();
 
         List<String> keywords;
@@ -82,7 +96,7 @@ public class PaperServiceImpl implements PaperService {
         PaperVO paperVO=new PaperVO(paper.getId(), paper.getTitle(),
                 authorAffiliationVOS, paper.getYear_highlight(),
                 paper.getSummary(), paper.getDoi(),keywords, paper.getCitation(),
-                paper.getReference());
+                paper.getReference(),refers,referees);
         Conference conference;
         if((conference=paper.getConference())!=null){
             paperVO.setConferenceId(conference.getId());

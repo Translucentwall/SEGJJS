@@ -1,5 +1,6 @@
 package edu.nju.se.teamnamecannotbeempty.backend.vo;
 
+import edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.paper.TitleAndId;
 import edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.visualization.KeywordsYear;
 
 import java.util.List;
@@ -20,7 +21,8 @@ public class AcademicEntityVO {
     private String popTrend;
     private List<KeywordsYear> keywordsYears;
     private List<YearlyAffiliation> yearlyAffiliationList;
-
+    private List<TitleAndId> refers;
+    private List<TitleAndId> referees;
 
     public AcademicEntityVO(int type, long id, String name, int refSum,
                             List<AcademicEntityItem> authors, List<AcademicEntityItem> affiliations,
@@ -40,6 +42,29 @@ public class AcademicEntityVO {
         this.popTrend = popTrend;
         this.yearlyAffiliationList=yearlyAffiliationList;
         this.keywordsYears=keywordsYears;
+    }
+
+    public AcademicEntityVO(int type, long id, String name, int refSum,
+                            List<AcademicEntityItem> authors, List<AcademicEntityItem> affiliations,
+                            List<AcademicEntityItem> conferences, List<TermItem> terms,
+                            List<SimplePaperVO> significantPapers, List<YearlyTerm> yearlyTerms,
+                            String popTrend, List<YearlyAffiliation> yearlyAffiliationList, List<KeywordsYear> keywordsYears
+    , List<TitleAndId> refers,List<TitleAndId> referees) {
+        this.type = type;
+        this.id = id;
+        this.name = name;
+        this.refSum = refSum;
+        this.authors = authors;
+        this.affiliations = affiliations;
+        this.conferences = conferences;
+        this.terms = terms;
+        this.significantPapers = significantPapers;
+        this.yearlyTerms = yearlyTerms;
+        this.popTrend = popTrend;
+        this.yearlyAffiliationList=yearlyAffiliationList;
+        this.keywordsYears=keywordsYears;
+        this.refers=refers;
+        this.referees=referees;
     }
 
     public int getType() {
@@ -144,6 +169,22 @@ public class AcademicEntityVO {
 
     public void setYearlyAffiliationList(List<YearlyAffiliation> yearlyAffiliationList) {
         this.yearlyAffiliationList = yearlyAffiliationList;
+    }
+
+    public void setRefers(List<TitleAndId> refers) {
+        this.refers = refers;
+    }
+
+    public void setReferees(List<TitleAndId> referees) {
+        this.referees = referees;
+    }
+
+    public List<TitleAndId> getRefers() {
+        return refers;
+    }
+
+    public List<TitleAndId> getReferees() {
+        return referees;
     }
 
     @Override

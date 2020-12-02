@@ -1,5 +1,7 @@
 package edu.nju.se.teamnamecannotbeempty.backend.vo;
 
+import edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.paper.TitleAndId;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -28,6 +30,10 @@ public class PaperVO {
 
     private Integer referenceCount;
 
+    private List<TitleAndId> refers;
+
+    private List<TitleAndId> referees;
+
     public PaperVO(long id, String title, List<Author_AffiliationVO> authorAffiliationVOS,
                    String year, String summary, String doi, List<String> authorKeywords,
                    Integer citationCount, Integer referenceCount) {
@@ -40,6 +46,22 @@ public class PaperVO {
         this.authorKeywords = authorKeywords;
         this.citationCount = citationCount;
         this.referenceCount = referenceCount;
+    }
+
+    public PaperVO(long id, String title, List<Author_AffiliationVO> authorAffiliationVOS,
+                   String year, String summary, String doi, List<String> authorKeywords,
+                   Integer citationCount, Integer referenceCount, List<TitleAndId> refers,List<TitleAndId> referees) {
+        this.id = id;
+        this.title = title;
+        this.authorAffiliationVOS = authorAffiliationVOS;
+        this.year=year;
+        this.summary = summary;
+        this.doi = doi;
+        this.authorKeywords = authorKeywords;
+        this.citationCount = citationCount;
+        this.referenceCount = referenceCount;
+        this.referees=referees;
+        this.refers=refers;
     }
 
     public long getId() {
@@ -132,6 +154,22 @@ public class PaperVO {
 
     public void setDoi(String doi) {
         this.doi = doi;
+    }
+
+    public List<TitleAndId> getReferees() {
+        return referees;
+    }
+
+    public List<TitleAndId> getRefers() {
+        return refers;
+    }
+
+    public void setReferees(List<TitleAndId> referees) {
+        this.referees = referees;
+    }
+
+    public void setRefers(List<TitleAndId> refers) {
+        this.refers = refers;
     }
 
     @Override

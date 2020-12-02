@@ -79,9 +79,16 @@ class TOPLASSpider(Spider):
 
     def websiteParse(self,response):
         item=lunwenspiderItem()
-        item['title']=response.xpath('//div[@class="border-bottom clearfix"]/h1/text()').extract()
-
+        item['title']=response.xpath('//div[@class="border-bottom clearfix"]/h1/text()').extract()[0]
+        citation=response.xpath('//div[@class="border-bottom clearfix"]/div[@class="issue-item__footer"]/div[@class'
+                                '="issue-item__footer-info pull-left"]/div/ul/li/span/span[1]/text()').extract()[0]
         abstracts= response.xpath('//div[@class="abstractSection abstractInFull"]/p/text()').extract()
+        publication=response.xpath('//div[@class="border-bottom clearfix"]/div[@class="issue-item__detail"]'
+                                   '/a/span/text()').extract()
+        time=response.xpath('//div[@class="border-bottom clearfix"]/div[@class="issue-item__detail"]'
+                                   '/span[@class="dot-separator"][1]/span/text()').extract()[0]
+        item['time']=time.strip()
+        item['keyword']=["Programming Languages and Systems"]
         text=""
         for abstract in abstracts:
             text=text+abstract+"\n"
@@ -90,21 +97,61 @@ class TOPLASSpider(Spider):
         organizations=response.xpath('//div[@id="sb-1"]/ul/li[@class="loa__item"]/a/span[@class="loa__author-info"]/span[@class="loa_author_inst"]/p/text()').extract()
         authorInfo=""
         orgInfo=""
+        list=[]
         for i in range(0,len(authors)):
-            authorInfo=authorInfo+authors[i]+"|"
-        for i in range(0,len(organizations)):
-            orgInfo=orgInfo+organizations[i]+"|"
-        item['author']=authorInfo
-        item['organization']=orgInfo
-
-        item['magazine']='ACM Transactions on Programming Languages and Systems'
-
-        references=response.xpath('//div[@class="col-md-8 col-sm-7 sticko__side-content"]/div[@class="article__body article__abstractView"]/div/ol[@class="rlist references__list references__numeric"]/li/span/text()').extract()
-        referInfo=""
+            author = {
+                "name": authors[i],
+                "affiliation": organizations[i]
+            }
+            list.append(author)
+        item['author']=list
+        item['publisher']=publication[0]
+        item['citationCount'] =citation
+        # references=response.xpath('//div[@class="article__section article__references show-more-items js--showMore"]/ol[@class="rlist references__list references__numeric"]/li/span/text()').extract()
+        references = response.xpath(
+            '//div[@class="article__body article__abstractView"]/div[@class="article__section article__references show-more-items"]/ol[@class="rlist references__list references__numeric"]/li/span/text()').extract()
+        refers=[]
         for reference in references:
-            referInfo=referInfo+reference+"|"
-        item['references']=referInfo
-
+            try:
+                a = 0
+                for i in range(0, len(reference)):
+                    if (reference[i].isdecimal()):
+                        a = i
+                        break
+                b = a
+                for i in range(a, len(reference)):
+                    if (reference[i] == '.'):
+                        a = i
+                        break
+                s = ""
+                for i in range(a + 2, len(reference)):
+                    if (reference[i] == "."):
+                        break
+                    s = s + reference[i]
+                infos = reference[0:b - 2]
+                tmp = infos.split(",")
+                authors = []
+                for i in tmp:
+                    if ('.' in i):
+                        continue
+                    if (len(i) <= 2):
+                        continue
+                    if (i.endswith("et al")):
+                        i = i.replace("et al", "")
+                    if ("and" in i):
+                        tp = i.split("and")
+                        if (len(tp[0]) > 1):
+                            authors.append(str(tp[0]).replace("and",""))
+                    else:
+                        authors.append(i)
+                a = {
+                    "title": s,
+                    "authors": authors
+                }
+                refers.append(a)
+            except:
+                continue
+        item['references']=refers
         yield item
 
 

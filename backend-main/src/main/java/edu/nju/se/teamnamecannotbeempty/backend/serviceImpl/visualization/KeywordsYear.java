@@ -16,6 +16,23 @@ public class KeywordsYear {
         for(String keyword:keywords){
             keywords_counts.put(keyword,1);
         }
+        getKeyword();
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public void setKeywords_counts(HashMap<String, Integer> keywords_counts) {
+
+    }
+
+    public void setKeywords(List<String> keywords) {
+        this.keywords = keywords;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Integer getYear() {
@@ -54,7 +71,8 @@ public class KeywordsYear {
         return  keyword;
     }
 
-    public Integer getCount(String keyword){
+    public Integer getCount(){
+        getKeyword();
         return keywords_counts.get(keyword);
     }
 
