@@ -85,4 +85,17 @@ public interface AffiliationDao extends JpaRepository<Affiliation, Long> {
     List<Affiliation> getAffiliationsByKeyword(Long id);
 
     List<Affiliation> getByAlias_Id(Long id);
+
+    /**
+     * 返回该作者所在的最新机构
+     * @param authorId 该作者
+     * @return
+     */
+    @Query(nativeQuery=true,
+            value="select affiliations.id, af_name, formatted_name, alias_id from affiliations " +
+                    "where affiliations.id in (select" +
+                    " aay.affiliation_id from author_affiliation_year aay " +
+            "where aay.author_id=?1 order by aay.`year` desc limit 1)")
+    Affiliation getNewestAffiliationByAuthor(Long authorId);
+
 }

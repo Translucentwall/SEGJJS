@@ -64,4 +64,20 @@ public class AuthorDaoTest {
         assertEquals(Integer.valueOf(2012),affiliationByYearList.get(0).getYear());
         assertEquals(Integer.valueOf(2020),affiliationByYearList.get(1).getYear());
     }
+
+    @Test
+    public void getAuthorByCooAndStartYear(){
+        List<Author> authorList=authorDao.getAuthorByCooAndStartYear(1L,2017);
+        assertNotNull(authorList);
+        assertEquals(1,authorList.size());
+    }
+
+    @Test
+    public void getAuthorByAffiWithoutPop(){
+        List<Author> authorList=authorDao.getAuthorByAffiWithoutPop(1L);
+        assertNotNull(authorList);
+        assertEquals(2,authorList.size());
+    }
+
+
 }

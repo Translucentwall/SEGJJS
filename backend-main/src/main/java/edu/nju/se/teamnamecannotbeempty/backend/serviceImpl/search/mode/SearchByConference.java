@@ -9,8 +9,8 @@ import org.hibernate.search.query.dsl.SimpleQueryStringMatchingContext;
 import org.hibernate.search.query.dsl.TermMatchingContext;
 import org.springframework.stereotype.Component;
 
-import static edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search.SearchMappingFactory.getFieldName_conference;
-import static edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search.SearchMappingFactory.getFieldName_searchYear;
+import static edu.nju.se.teamnamecannotbeempty.backend.hibernate_search.SearchMappingFactory.getFieldName_conference;
+import static edu.nju.se.teamnamecannotbeempty.backend.hibernate_search.SearchMappingFactory.getFieldName_searchYear;
 
 @Component("Publication")
 public class SearchByConference extends SearchMode {

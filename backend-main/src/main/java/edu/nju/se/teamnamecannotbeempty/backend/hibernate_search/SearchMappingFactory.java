@@ -1,4 +1,4 @@
-package edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search;
+package edu.nju.se.teamnamecannotbeempty.backend.hibernate_search;
 
 import edu.nju.se.teamnamecannotbeempty.data.domain.*;
 import org.apache.lucene.analysis.charfilter.MappingCharFilterFactory;
@@ -86,7 +86,12 @@ public class SearchMappingFactory {
                     .property("name", ElementType.METHOD).field().analyzer(analyzerName)
                 //configure Term
                 .entity(Term.class)
-                    .property("content", ElementType.METHOD).field().analyzer(analyzerName);
+                    .property("content", ElementType.METHOD).field().analyzer(analyzerName)
+                //Term as root entity
+                .entity(Term.class).indexed()
+                    .property("content",ElementType.METHOD)
+                        .field().name("content").analyzer(analyzerName);
+
         return searchMapping;
     }
 }

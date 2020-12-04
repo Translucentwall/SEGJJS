@@ -9,7 +9,7 @@ import org.hibernate.search.query.dsl.SimpleQueryStringMatchingContext;
 import org.hibernate.search.query.dsl.TermMatchingContext;
 import org.springframework.stereotype.Component;
 
-import static edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search.SearchMappingFactory.*;
+import static edu.nju.se.teamnamecannotbeempty.backend.hibernate_search.SearchMappingFactory.*;
 
 @Component("All")
 public class FuzzySearch extends SearchMode {

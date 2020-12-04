@@ -2,8 +2,9 @@ package edu.nju.se.teamnamecannotbeempty.backend.data;
 
 import edu.nju.se.teamnamecannotbeempty.api.IDataImportJob;
 import edu.nju.se.teamnamecannotbeempty.backend.AppContextProvider;
+import edu.nju.se.teamnamecannotbeempty.backend.hibernate_search.HibernateSearchInit;
 import edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search.SearchServiceHibernateImpl;
-import edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search.Searchable;
+import edu.nju.se.teamnamecannotbeempty.backend.hibernate_search.Searchable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class InitDataSource implements ApplicationListener<ContextRefreshedEvent> {
     private final IDataImportJob dataImportJob;
-    private final SearchServiceHibernateImpl serviceHibernate;
+    private final HibernateSearchInit hibernateSearchInit;
 
     private static final Logger logger = LoggerFactory.getLogger(InitDataSource.class);
 
     @Autowired
-    public InitDataSource(IDataImportJob dataImportJob, SearchServiceHibernateImpl serviceHibernate) {
+    public InitDataSource(IDataImportJob dataImportJob, HibernateSearchInit hibernateSearchInit) {
         this.dataImportJob = dataImportJob;
-        this.serviceHibernate = serviceHibernate;
+        this.hibernateSearchInit=hibernateSearchInit;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class InitDataSource implements ApplicationListener<ContextRefreshedEvent
                     long total = dataImportJob.trigger();
                     AppContextProvider.getBean(Searchable.class).setNum(total);
                     logger.info(total + " papers to import. 从数据库获取count(Paper)来确认导入完成");
-                    serviceHibernate.flushIndexes();
+                    hibernateSearchInit.flushIndexes();
                 } catch (RemoteLookupFailureException e) {
                     logger.error("Connect to remote batch service fail. Import aborted.");
                 }

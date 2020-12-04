@@ -1,6 +1,7 @@
 package edu.nju.se.teamnamecannotbeempty.data.repository;
 
 import edu.nju.se.teamnamecannotbeempty.data.data_transfer.AffiliationByYear;
+import edu.nju.se.teamnamecannotbeempty.data.domain.Affiliation;
 import edu.nju.se.teamnamecannotbeempty.data.domain.Author;
 import edu.nju.se.teamnamecannotbeempty.data.domain.AuthorAffiliationYear;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -83,4 +84,25 @@ public interface AuthorDao extends JpaRepository<Author, Long> {
             "(aay.affiliation.name,aay.affiliation.id, aay.year) " +
             "from AuthorAffiliationYear aay where aay.author.id=?1 order by aay.year asc")
     List<AffiliationByYear> getAffiliationsOfAuthorByYear(Long authorId);
+
+    /**
+     * 查询从某年份开始与该作者有过合作关系的其他作者
+     * @param authorId 该作者
+     * @param startYear 开始年份
+     * @return
+     */
+    @Query(nativeQuery = true,
+            value="select distinct  au.id, au_name, lower_case_name, alias_id from authors au "+
+                    "inner join aa_cooperate aac on au.id=aac.author2_id " +
+                    "where aac.author1_id=?1 and aac.`year`>=?2")
+    List<Author> getAuthorByCooAndStartYear(Long authorId, Integer startYear);
+
+    /**
+     * 查询在该机构待过的所有作者，不管作者和该机构有无热度
+     * @param affiId 该机构
+     * @return
+     */
+    @Query("select aay.author from AuthorAffiliationYear aay " +
+            "where aay.affiliation.id=?1")
+    List<Author> getAuthorByAffiWithoutPop(Long affiId);
 }

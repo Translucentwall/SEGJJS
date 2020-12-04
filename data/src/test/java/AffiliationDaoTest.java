@@ -50,4 +50,13 @@ public class AffiliationDaoTest {
         assertNotNull(affiliations);
         assertEquals(2, affiliations.size());
     }
+
+    @Test
+    public void getNewestAffiliationByAuthor(){
+        Affiliation affiliation1=affiliationDao.getNewestAffiliationByAuthor(1L);
+        assertNotNull(affiliation1);
+        assertEquals(2L,affiliation1.getId().longValue());
+        Affiliation affiliation2=affiliationDao.getNewestAffiliationByAuthor(3L);
+        assertNull(affiliation2);
+    }
 }

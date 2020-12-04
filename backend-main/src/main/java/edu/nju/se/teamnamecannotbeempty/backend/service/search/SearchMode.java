@@ -1,6 +1,6 @@
 package edu.nju.se.teamnamecannotbeempty.backend.service.search;
 
-import edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search.SearchMappingFactory;
+import edu.nju.se.teamnamecannotbeempty.backend.hibernate_search.SearchMappingFactory;
 import edu.nju.se.teamnamecannotbeempty.data.domain.*;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Query;
@@ -97,7 +97,9 @@ public abstract class SearchMode {
 
     protected void highlightConference(Paper paper, Highlighter highlighter, Analyzer analyzer) {
         Conference conference = paper.getConference();
-        if (conference == null) return;
+        if (conference == null) {
+            return;
+        }
         String hl = null;
         Conference copy = new Conference();
         BeanUtils.copyProperties(paper.getConference(), copy);

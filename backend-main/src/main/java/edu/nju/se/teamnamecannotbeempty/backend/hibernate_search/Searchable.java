@@ -1,4 +1,4 @@
-package edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search;
+package edu.nju.se.teamnamecannotbeempty.backend.hibernate_search;
 
 import edu.nju.se.teamnamecannotbeempty.data.repository.PaperDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,9 @@ public class Searchable {
      * @return 能否开始搜索
      */
     public boolean isOk() {
-        if (!ok)
+        if (!ok) {
             ok = importOK();
+        }
         return (ok && !indexing) || pass;
     }
 
@@ -41,16 +42,16 @@ public class Searchable {
         if (num == null) num = l;
     }
 
-    boolean importOK() {
+    public boolean importOK() {
         return (num != null) && (num == paperDao.count());
     }
 
-    void startIndexing() {
+    public void startIndexing() {
         indexing = true;
         ok = false;
     }
 
-    void endIndexing() {
+    public void endIndexing() {
         indexing = false;
         ok = true;
     }

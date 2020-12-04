@@ -22,7 +22,7 @@ import javax.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
 
-import static edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search.SearchMappingFactory.*;
+import static edu.nju.se.teamnamecannotbeempty.backend.hibernate_search.SearchMappingFactory.*;
 
 @Component("Advanced")
 public class AdvancedSearch extends SearchMode {
