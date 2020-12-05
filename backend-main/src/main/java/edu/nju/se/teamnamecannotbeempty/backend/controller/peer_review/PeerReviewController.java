@@ -33,7 +33,7 @@ public class PeerReviewController {
 
     /**
      * 根据用户输入的评审信息进行同行评审人推荐
-     * @param inf 用户输入的评审表单信息
+     * @param inf 用户输入的评审表单信息,区分大小写
      * @return ResponseVo，当success=false时，content不包含内容，报错信息在message，
      *         当success=true时，content包含推荐的评审人列表，按评审人热度降序排序，message不包含内容
      */
