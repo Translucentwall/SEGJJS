@@ -11,7 +11,7 @@ spring:
         show_sql: false
         format_sql: false
         search:
-          model_mapping: "edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.search.SearchMappingFactory"
+          model_mapping: "edu.nju.se.teamnamecannotbeempty.backend.hibernate_search.SearchMappingFactory"
           analyzer: "noStopWords"
           default:
             directory_provider: "filesystem"
@@ -58,4 +58,8 @@ entity-msg:
   conference-type: 3
   term-type: 4
   paper-type: 5
+
+peer-review-msg:
+  invalid-term: "该研究方向字段暂未收录入数据库"
+  null-param: "传入参数不能为null"
 

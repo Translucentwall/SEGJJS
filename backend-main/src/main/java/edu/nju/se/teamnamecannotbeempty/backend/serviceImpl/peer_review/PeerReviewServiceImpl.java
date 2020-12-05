@@ -87,12 +87,16 @@ public class PeerReviewServiceImpl implements PeerReviewService {
 
         List<Author> blockAuthorsList=new ArrayList<>(0);
 
+
+
         Optional<Author> authorOpt=authorDao.findByName(authorName);
         if(authorOpt.isPresent()) {
             Author author=authorOpt.get();
+            blockAuthorsList.add(author);
             Calendar date = Calendar.getInstance();
             int currentYear = date.get(Calendar.YEAR);
-            blockAuthorsList=authorDao.getAuthorByCooAndStartYear(author.getId(),currentYear-3);
+            blockAuthorsList.addAll(authorDao.
+                    getAuthorByCooAndStartYear(author.getId(),currentYear-3));
         }
         Optional<Affiliation> affiliationOpt=affiliationDao.findByName(affiliationName);
         if(affiliationOpt.isPresent()){
