@@ -128,7 +128,7 @@ public class AcademicEntityFetch {
         //生成热度变化字符串
         List<PopByYear> popByYearList = authorDao.findById(id).orElseGet(Author::new).
                 getPops().stream().filter(
-                        pop->pop.getYear()!=null).collect(
+                pop->pop.getYear()!=null).collect(
                 Collectors.groupingBy(Author.Popularity::getYear)
         ).entrySet().stream().map(en -> new PopByYear(en.getKey(), en.getValue().stream().mapToDouble(
                 Author.Popularity::getPopularity
@@ -185,11 +185,11 @@ public class AcademicEntityFetch {
         //生成热度变化字符串
         List<PopByYear> popByYearList = affiliationDao.findById(id).orElseGet(Affiliation::new)
                 .getPops().stream()
-        .filter(pop->pop.getYear()!=null).collect(
-                Collectors.groupingBy(Affiliation.Popularity::getYear)
-        ).entrySet().stream().map(en -> new PopByYear(en.getKey(), en.getValue().stream().mapToDouble(
-                Affiliation.Popularity::getPopularity
-        ).sum())).sorted(Comparator.comparing(PopByYear::getYear)).collect(Collectors.toList());
+                .filter(pop->pop.getYear()!=null).collect(
+                        Collectors.groupingBy(Affiliation.Popularity::getYear)
+                ).entrySet().stream().map(en -> new PopByYear(en.getKey(), en.getValue().stream().mapToDouble(
+                        Affiliation.Popularity::getPopularity
+                ).sum())).sorted(Comparator.comparing(PopByYear::getYear)).collect(Collectors.toList());
         String popTrend = generatePopTrend(popByYearList);
 
         return new AcademicEntityVO(entityMsg.getAffiliationType(), id, affiliationDao.findById(id).
@@ -221,7 +221,7 @@ public class AcademicEntityFetch {
 
         List<SimplePaperVO> simplePaperVOS = fetchForCache.getAllPapersByConference(id)
                 .stream().map(SimplePaperVO::new
-        ).collect(Collectors.toList());
+                ).collect(Collectors.toList());
         if(simplePaperVOS.size()>12) {
             simplePaperVOS=simplePaperVOS.subList(0,12);
         }
@@ -268,8 +268,8 @@ public class AcademicEntityFetch {
         List<AcademicEntityItem> academicEntityItems = conferences.stream()
                 .filter(conference -> !conference.getName().equals("NA"))
                 .map(
-                conference -> new AcademicEntityItem(entityMsg.getConferenceType(), conference.getId(),
-                        conference.getName(), null)) //会议没有热度
+                        conference -> new AcademicEntityItem(entityMsg.getConferenceType(), conference.getId(),
+                                conference.getName(), null)) //会议没有热度
                 .collect(Collectors.toList());
         return academicEntityItems.size() > 15 ? academicEntityItems.subList(0, 15) : academicEntityItems;
     }
@@ -309,7 +309,7 @@ public class AcademicEntityFetch {
         Map<Integer, List<Paper>> paperByYear = allPapers.stream().distinct().
                 filter(paper -> paper.getDoi()!=null)
                 .collect(
-                Collectors.groupingBy(Paper::getYear));
+                        Collectors.groupingBy(Paper::getYear));
         return paperByYear.entrySet().stream().map(
                 en -> new YearlyTerm(en.getKey(), en.getValue().stream().flatMap(
                         paper -> fetchForCache.getTermPopByPaperID(paper.getId()).stream().map(
@@ -385,7 +385,8 @@ public class AcademicEntityFetch {
                 List<Author_Affiliation> author_affiliations=tmp.getAa();
                 for(Author_Affiliation author_affiliation:author_affiliations){
                     Author author=author_affiliation.getAuthor();
-                    answer.add(new TitleAndId(author.getName(),author.getId()));
+                    if(author!=null)
+                        answer.add(new TitleAndId(author.getName(),author.getId()));
                 }
             }
         }
