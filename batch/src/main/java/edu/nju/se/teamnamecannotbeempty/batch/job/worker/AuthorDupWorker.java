@@ -99,7 +99,7 @@ public class AuthorDupWorker {
             }
         });
         List<DuplicateAuthor> dups=duplicateAuthorDao.findAll();
-        Map<Long,Long> son_idTofather_id=new HashMap();
+        Map<Long,Long> son_idTofather_id=new HashMap<>();
         for(int i=0;i<dups.size();i++){
             son_idTofather_id.put(dups.get(i).getSon().getId(),dups.get(i).getFather().getId());
         }
