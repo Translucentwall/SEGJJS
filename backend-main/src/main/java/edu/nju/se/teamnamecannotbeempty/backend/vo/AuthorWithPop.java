@@ -28,4 +28,12 @@ public class AuthorWithPop {
     public void setPop(double pop) {
         this.pop = pop;
     }
+
+    public PeerViewer generatePeerViewer(){
+        PeerViewer peerViewer=new PeerViewer();
+        peerViewer.setAuthorId(String.valueOf(author.getId()));
+        peerViewer.setAuthorName(author.getName());
+        peerViewer.setPop(pop);
+        return peerViewer;
+    }
 }

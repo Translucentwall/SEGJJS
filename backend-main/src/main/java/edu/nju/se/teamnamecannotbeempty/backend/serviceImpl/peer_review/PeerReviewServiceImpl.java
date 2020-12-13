@@ -4,6 +4,7 @@ import edu.nju.se.teamnamecannotbeempty.backend.config.parameter.PeerReviewMsg;
 import edu.nju.se.teamnamecannotbeempty.backend.service.peer_review.PeerReviewService;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.AuthorWithPop;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.InformationReviewed;
+import edu.nju.se.teamnamecannotbeempty.backend.vo.PeerViewer;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.ResponseVO;
 
 import edu.nju.se.teamnamecannotbeempty.data.domain.Affiliation;
@@ -123,7 +124,9 @@ public class PeerReviewServiceImpl implements PeerReviewService {
         ResponseVO responseVO=ResponseVO.success();
         List<AuthorWithPop> ansList=authorWithPops.size()>20? authorWithPops.subList(0,20):
                 authorWithPops;
-        responseVO.setContent(ansList);
+        List<PeerViewer> peerViewerList=ansList.stream().
+                map(AuthorWithPop::generatePeerViewer).collect(Collectors.toList());
+        responseVO.setContent(peerViewerList);
         return responseVO;
     }
 
