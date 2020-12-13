@@ -39,6 +39,8 @@ public class PeerReviewServiceImpl implements PeerReviewService {
     private final AffiliationDao affiliationDao;
     private final AuthorPopDao authorPopDao;
 
+    private final String defaultTerm="programming languages and systems";
+
     @Autowired
     public PeerReviewServiceImpl(EntityManager entityManager, TermDao termDao,
                                  PeerReviewMsg peerReviewMsg, AuthorDao authorDao,
@@ -81,7 +83,7 @@ public class PeerReviewServiceImpl implements PeerReviewService {
 
         Optional<Term> termOpt=termDao.findByContent(termName);
         if(!termOpt.isPresent()){
-            return ResponseVO.fail(peerReviewMsg.getInvalidTerm());
+            termOpt=termDao.findByContent(defaultTerm);
         }
         Term term=termOpt.get();
         List<Author> authorList=authorDao.getAuthorsByKeyword(term.getId());
