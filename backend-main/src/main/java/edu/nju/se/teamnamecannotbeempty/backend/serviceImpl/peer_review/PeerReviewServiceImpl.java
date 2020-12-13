@@ -2,6 +2,7 @@ package edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.peer_review;
 
 import edu.nju.se.teamnamecannotbeempty.backend.config.parameter.PeerReviewMsg;
 import edu.nju.se.teamnamecannotbeempty.backend.service.peer_review.PeerReviewService;
+import edu.nju.se.teamnamecannotbeempty.backend.vo.AuthorWithPop;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.InformationReviewed;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.ResponseVO;
 
@@ -118,36 +119,12 @@ public class PeerReviewServiceImpl implements PeerReviewService {
                         pop=apPop.get().getPopularity();
                     }
                     return new AuthorWithPop(author,pop);
-                }).sorted((o1, o2) -> (int)(o2.pop-o1.pop)*100).collect(Collectors.toList());
+                }).sorted((o1, o2) -> (int)(o2.getPop()-o1.getPop())*100).collect(Collectors.toList());
         ResponseVO responseVO=ResponseVO.success();
-        responseVO.setContent(authorWithPops.stream().
-                map(AuthorWithPop::getAuthor).collect(Collectors.toList()));
+        List<AuthorWithPop> ansList=authorWithPops.size()>20? authorWithPops.subList(0,20):
+                authorWithPops;
+        responseVO.setContent(ansList);
         return responseVO;
-    }
-
-    class AuthorWithPop{
-        private Author author;
-        private double pop;
-        AuthorWithPop(Author author, double pop){
-            this.author=author;
-            this.pop=pop;
-        }
-
-        public Author getAuthor() {
-            return author;
-        }
-
-        public void setAuthor(Author author) {
-            this.author = author;
-        }
-
-        public double getPop() {
-            return pop;
-        }
-
-        public void setPop(double pop) {
-            this.pop = pop;
-        }
     }
 
 }
