@@ -13,6 +13,8 @@ public interface RefDao extends JpaRepository<Ref, Long> {
 
     List<Ref> findByReferee_Id(Long id);
 
+    List<Ref> findByReferer_Id(Long id);
+
     /**
      * 获得论文的被引用数
      * @param referee

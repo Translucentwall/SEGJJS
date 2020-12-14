@@ -75,7 +75,7 @@ public class PaperServiceImpl implements PaperService {
                     new AffiliationVO(authorAffiliation.getAffiliation().getName(),
                             authorAffiliation.getAffiliation().getId())));
         }
-        List<Ref> refs=paper.getRefs();
+        List<Ref> refs=refDao.findByReferer_Id(paper.getId());
         List<TitleAndId> refers=new ArrayList<>();
         for(Ref ref:refs){
             Paper tmp=ref.getReferee();

@@ -363,7 +363,7 @@ public class AcademicEntityFetch {
     private List<TitleAndId> getRefers(List<Paper> papers){
         List<TitleAndId> answer=new ArrayList<TitleAndId>();
         for(Paper paper:papers){
-            List<Ref> refs=paper.getRefs();
+            List<Ref> refs=refDao.findByReferer_Id(paper.getId());
             for(Ref ref:refs){
                 Paper tmp=ref.getReferee();
                 List<Author_Affiliation> author_affiliations=tmp.getAa();
