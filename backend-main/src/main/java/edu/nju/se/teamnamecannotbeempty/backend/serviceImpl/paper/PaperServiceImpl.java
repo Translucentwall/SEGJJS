@@ -79,12 +79,16 @@ public class PaperServiceImpl implements PaperService {
         List<TitleAndId> refers=new ArrayList<>();
         for(Ref ref:refs){
             Paper tmp=ref.getReferee();
+            if(tmp==null)
+                continue;
             refers.add(new TitleAndId(tmp.getTitle(),tmp.getId()));
         }
         List<Ref> refees=refDao.findByReferee_Id(paper.getId());
         List<TitleAndId> referees=new ArrayList<>();
         for(Ref ref:refees){
             Paper tmp=ref.getReferee();
+            if(tmp==null)
+                continue;
             referees.add(new TitleAndId(tmp.getTitle(),tmp.getId()));
         }
 
