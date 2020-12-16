@@ -88,7 +88,11 @@ public class AcademicEntityFetch {
         for(int i=0;i<allPapers.size();i++){
             Paper paper=allPapers.get(i);
             Integer year=paper.getYear();
+            if(year==null)
+                continue;
             List<Term> terms=paper.getAuthor_keywords();
+            if(terms.size()==0)
+                continue;
             List<String> keywords=new ArrayList<>();
             for(int j=0;j<terms.size();j++){
                 keywords.add(terms.get(j).getContent());
