@@ -2,6 +2,7 @@ package edu.nju.se.teamnamecannotbeempty.backend.controller.visualization;
 
 import edu.nju.se.teamnamecannotbeempty.backend.service.visualization.EntityService;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.AcademicEntityVO;
+import edu.nju.se.teamnamecannotbeempty.backend.vo.CooperatorVO;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.GraphVO;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.SimplePaperVO;
 import org.junit.Before;
@@ -110,5 +111,14 @@ public class entityTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
+    }
+
+    @Test
+    public void getPossibleCooperators(){
+        entityController = new EntityController();
+        entityController.setEntityService(entityService);
+        List<CooperatorVO> list = new ArrayList<>(0);
+        Mockito.when(entityService.getPossibleCooperators(1)).thenReturn(list);
+        assertEquals(list,entityController.getPossibleCooperators(1));
     }
 }

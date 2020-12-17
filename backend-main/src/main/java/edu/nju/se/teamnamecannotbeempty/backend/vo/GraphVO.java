@@ -1,5 +1,6 @@
 package edu.nju.se.teamnamecannotbeempty.backend.vo;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,11 +9,11 @@ public class GraphVO {
     private long centerId;
     private int centerType;
     private String centerName;
-    private List<Node> nodes;
+    private Collection<Node> nodes;
     private List<Link> links;
     private Double popularity;
 
-    public GraphVO(long centerId, int centerType, String centerName, List<Node> nodes, List<Link> links, Double popularity) {
+    public GraphVO(long centerId, int centerType, String centerName, Collection<Node> nodes, List<Link> links, Double popularity) {
         StringBuilder preId = new StringBuilder(String.valueOf(centerId));
         while (preId.length()<10){
             preId.insert(0,"0");
@@ -59,11 +60,11 @@ public class GraphVO {
         this.centerId = centerId;
     }
 
-    public List<Node> getNodes() {
+    public Collection<Node> getNodes() {
         return nodes;
     }
 
-    public void setNodes(List<Node> nodes) {
+    public void setNodes(Collection<Node> nodes) {
         this.nodes = nodes;
     }
 
@@ -85,8 +86,12 @@ public class GraphVO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GraphVO graphVO = (GraphVO) o;
         return centerId == graphVO.centerId &&
                 centerType == graphVO.centerType &&

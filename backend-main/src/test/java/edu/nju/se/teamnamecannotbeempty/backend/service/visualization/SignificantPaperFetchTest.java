@@ -30,8 +30,6 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 public class SignificantPaperFetchTest {
     @Mock
-    private PaperDao paperDao;
-    @Mock
     private EntityMsg entityMsg;
     @Mock
     private FetchForCache fetchForCache;

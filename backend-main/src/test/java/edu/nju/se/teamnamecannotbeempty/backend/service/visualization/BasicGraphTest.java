@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
@@ -66,26 +67,30 @@ public class BasicGraphTest {
     }
 
     @Test
-    public void authorBasicGraphTest(){
-        Author author1 = new Author(); author1.setId(1L); author1.setName("");
+    public void authorBasicGraphTest() {
+        Author author1 = new Author();
+        author1.setId(1L);
+        author1.setName("");
         Optional<Author> optionalAuthor = Optional.of(author1);
         when(authorDao.findById(1L)).thenReturn(optionalAuthor);
-        Paper paper = new Paper(); paper.setId(1L); paper.setTitle("paper1");
-        Paper.Popularity paperPop = new Paper.Popularity(); paperPop.setPaper(paper);
-        paperPop.setPopularity(1.0);
-        Affiliation affiliation1 = new Affiliation(); affiliation1.setId(1L); affiliation1.setName("affiliation1");
-        Term term1 = new Term(); term1.setContent("term1"); term1.setId(1L);
-        Term.Popularity termPop = new Term.Popularity();
-        termPop.setTerm(term1);
-        when(paperPopDao.findTopPapersByAuthorId(1L)).thenReturn(Collections.singletonList(paperPop));
-        when(affiliationDao.getAffiliationsWithPopByAuthor(1L)).thenReturn(Collections.singletonList(affiliation1));
-        when(termPopDao.getTermPopByAuthorID(1L)).thenReturn(Collections.singletonList(termPop));
-        when(fetchForCache.getTermPopByPaperID(1L)).thenReturn(Collections.singletonList(termPop));
-        when(paperPopDao.getWeightByAuthorOnKeyword(1L,1L)).thenReturn(1.0);
-        GraphVO graphVO = basicGraphFetch.getBasicGraph(1L,1);
-        Assert.assertEquals(graphVO.getNodes().size(),4);
-        Assert.assertEquals(graphVO.getLinks().size(),4);
-        Assert.assertEquals(graphVO.getId(),"10000000001");
+        Author author2=new Author();
+        author2.setId(2L); author2.setName("");
+        Author author3=new Author();
+        author3.setId(3L); author3.setName("");
+        Author author4=new Author();
+        author4.setId(4L); author4.setName("");
+        when(authorDao.getAuthorByCoo(1L)).
+                thenReturn(new HashSet<>(Arrays.asList(author2,author3)));
+        when(authorDao.getAuthorByCoo(2L)).
+                thenReturn(new HashSet<>(Arrays.asList(author1,author3,author4)));
+        when(authorDao.getAuthorByCoo(3L)).
+                thenReturn(new HashSet<>(Arrays.asList(author1,author2)));
+        when(authorDao.getAuthorByCoo(4L)).
+                thenReturn(new HashSet<>(Collections.singletonList(author2)));
+        GraphVO graphVO=basicGraphFetch.getBasicGraph(1L,1);
+        Assert.assertNotNull(graphVO);
+        Assert.assertEquals(4,graphVO.getNodes().size());
+        Assert.assertEquals(4,graphVO.getLinks().size());
     }
 
     @Test

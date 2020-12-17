@@ -83,4 +83,11 @@
            overflowToDisk="true"
            diskPersistent="false">
     </cache>
+
+    <cache name="getPossibleCoos"
+           maxElementsInmemory="1000"
+           eternal="true"
+           overflowToDisk="true"
+           diskPersistent="false">
+    </cache>
 </ehcache>

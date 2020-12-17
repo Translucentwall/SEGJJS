@@ -9,10 +9,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @DataJpaTest
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,5 +34,12 @@ public class TermDaoTest {
         Optional<Term> result = termDao.findByContentIgnoreCase("MINING");
         assertTrue(result.isPresent());
         assertEquals("mining", result.get().getContent());
+    }
+
+    @Test
+    public void getByAuthor(){
+        List<Term> termList=termDao.getByAuthor(1L);
+        assertNotNull(termList);
+        assertEquals(2,termList.size());
     }
 }

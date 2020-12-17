@@ -2,6 +2,7 @@ package edu.nju.se.teamnamecannotbeempty.backend.serviceImpl.visualization;
 
 import edu.nju.se.teamnamecannotbeempty.backend.service.visualization.EntityService;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.AcademicEntityVO;
+import edu.nju.se.teamnamecannotbeempty.backend.vo.CooperatorVO;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.GraphVO;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.SimplePaperVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +17,18 @@ public class EntityServiceImpl implements EntityService {
     private final BasicGraphFetch basicGraphFetch;
     private final CompleteGraphFetch completeGraphFetch;
     private final SignificantPaperFetch significantPaperFetch;
+    private final CooperatorsPrediction cooperatorsPrediction;
 
     @Autowired
     public EntityServiceImpl(AcademicEntityFetch academicEntityFetch, BasicGraphFetch basicGraphFetch,
                              CompleteGraphFetch completeGraphFetch,
-                             SignificantPaperFetch significantPaperFetch) {
+                             SignificantPaperFetch significantPaperFetch,
+                             CooperatorsPrediction cooperatorsPrediction) {
         this.academicEntityFetch = academicEntityFetch;
         this.basicGraphFetch = basicGraphFetch;
         this.completeGraphFetch = completeGraphFetch;
         this.significantPaperFetch = significantPaperFetch;
-
+        this.cooperatorsPrediction=cooperatorsPrediction;
     }
 
     @Override
@@ -47,4 +50,11 @@ public class EntityServiceImpl implements EntityService {
     public List<SimplePaperVO> getSignificantPaper(long id, int type, int year, long termId) {
         return significantPaperFetch.getSignificantPaper(id, type, year, termId);
     }
+
+    @Override
+    public List<CooperatorVO> getPossibleCooperators(long id) {
+        return cooperatorsPrediction.getPossibleCoos(id);
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package edu.nju.se.teamnamecannotbeempty.backend.service.visualization;
 
 import edu.nju.se.teamnamecannotbeempty.backend.vo.AcademicEntityVO;
+import edu.nju.se.teamnamecannotbeempty.backend.vo.CooperatorVO;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.GraphVO;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.SimplePaperVO;
 
@@ -39,5 +40,12 @@ public interface EntityService {
      * @return 代表作列表
      */
     List<SimplePaperVO> getSignificantPaper(long id, int type, int year, long termId);
+
+    /**
+     * 获取预测的合作者，按可能性降序，最多20个
+     * @param id 作者id
+     * @return 合作者列表
+     */
+    List<CooperatorVO> getPossibleCooperators(long id);
 
 }

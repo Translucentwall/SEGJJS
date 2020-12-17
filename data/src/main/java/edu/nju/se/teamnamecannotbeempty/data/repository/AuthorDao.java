@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface AuthorDao extends JpaRepository<Author, Long> {
@@ -80,6 +81,11 @@ public interface AuthorDao extends JpaRepository<Author, Long> {
 
     List<Author> getByAlias_Id(Long id);
 
+    /**
+     * 返回作者待过的所有机构及年份
+     * @param authorId
+     * @return
+     */
     @Query("select new edu.nju.se.teamnamecannotbeempty.data.data_transfer.AffiliationByYear" +
             "(aay.affiliation.name,aay.affiliation.id, aay.year) " +
             "from AuthorAffiliationYear aay where aay.author.id=?1 order by aay.year asc")
@@ -96,6 +102,14 @@ public interface AuthorDao extends JpaRepository<Author, Long> {
                     "inner join aa_cooperate aac on au.id=aac.author2_id " +
                     "where aac.author1_id=?1 and aac.`year`>=?2")
     List<Author> getAuthorByCooAndStartYear(Long authorId, Integer startYear);
+
+    /**
+     * 查询与该作者合作过的所有作者
+     * @param authorId 该作者
+     * @return
+     */
+    @Query("select distinct aac.author2 from AA_Cooperate aac where aac.author1.id=?1")
+    Set<Author> getAuthorByCoo(Long authorId);
 
     /**
      * 查询在该机构待过的所有作者，不管作者和该机构有无热度

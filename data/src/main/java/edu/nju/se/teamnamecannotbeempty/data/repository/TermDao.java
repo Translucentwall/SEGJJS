@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,4 +32,16 @@ public interface TermDao extends JpaRepository<Term, Long> {
      */
     @Query("select distinct p.author_keywords from Paper p")
     Streamable<Term> findAllAuthorKeywords();
+
+    /**
+     * 返回作者的所有研究方向，不带热度
+     * @param id
+     * @return
+     */
+    @Query(nativeQuery=true,
+    value="SELECT distinct t.id,  t.content FROM terms t" +
+            " LEFT JOIN papers_author_keywords pak" +
+            " ON pak.author_keywords_id = t.id LEFT JOIN paper_aa aa" +
+            " ON pak.paper_id = aa.paper_id WHERE aa.author_id = ?1")
+    List<Term> getByAuthor(Long id);
 }

@@ -2,6 +2,7 @@ package edu.nju.se.teamnamecannotbeempty.backend.controller.visualization;
 
 import edu.nju.se.teamnamecannotbeempty.backend.service.visualization.EntityService;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.AcademicEntityVO;
+import edu.nju.se.teamnamecannotbeempty.backend.vo.CooperatorVO;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.GraphVO;
 import edu.nju.se.teamnamecannotbeempty.backend.vo.SimplePaperVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,15 @@ public class EntityController {
     @RequestMapping(value = "/academic/significantPapers",method = RequestMethod.GET)
     public List<SimplePaperVO> getSignificantPaper(@RequestParam long id, @RequestParam int type,@RequestParam int year, @RequestParam long termId){
         return entityService.getSignificantPaper(id,type,year,termId);
+    }
+
+    /**
+     * 返回预测的可能合作的作者，具体信息看VO
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/academic/cooperators/{id}",method = RequestMethod.GET)
+    public List<CooperatorVO> getPossibleCooperators(@PathVariable long id){
+        return entityService.getPossibleCooperators(id);
     }
 }

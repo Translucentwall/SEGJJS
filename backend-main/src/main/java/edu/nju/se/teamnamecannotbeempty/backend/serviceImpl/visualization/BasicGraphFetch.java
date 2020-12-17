@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -67,31 +66,45 @@ public class BasicGraphFetch {
     }
 
     private GraphVO authorBasicGraph(long id) {
-        List<Paper> paperList = fetchForCache.getAllPapersByAuthor(id);
-        List<Node> nodes = generatePaperNode(paperList);
-        //去NA
-        List<Affiliation> affiliationList = affiliationDao.getAffiliationsWithPopByAuthor(id).stream()
-                .filter(affiliation -> !affiliation.getName().equals("NA")).
-                        collect(Collectors.toList());
-
-        nodes.addAll(generateAffiliationNode(affiliationList));
-        List<Link> links = generateLinksWithoutWeight(id, entityMsg.getAuthorType(), nodes);
-        List<Term.Popularity> termPopularities = termPopDao.getTermPopByAuthorID(id);
-        nodes.addAll(generateTermNode(termPopularities));
-        links.addAll(generateLinksWithWeightInAuthor(id, termPopularities));
-        List<Link> links1 = paperPopDao.findTopPapersByAuthorId(id).stream().flatMap(paperPop ->
-                fetchForCache.getTermPopByPaperID(paperPop.getPaper().getId()).stream()
-                        .map(termPop -> new Link(paperPop.getPaper().getId(), entityMsg.getPaperType(),
-                                termPop.getTerm().getId(),
-                                entityMsg.getTermType(), paperPop.getPopularity()))).
-                collect(Collectors.toList());
-        links.addAll(links1);
         String centerName = authorDao.findById(id).orElseGet(Author::new).getName();
         Node centerNode = new Node(id, centerName, entityMsg.getAuthorType());
-        nodes.add(centerNode);
-        nodes.forEach(node -> node.setPopularity(addPopInNode(node)));
-        return new GraphVO(id, entityMsg.getAuthorType(), centerName, nodes, links,
-                addPopInNode(centerNode));
+        Set<Author> authorSet1=authorDao.getAuthorByCoo(id);
+        List<Author> authorList1=new ArrayList<>(authorSet1);
+        List<Node> nodes1=generateAuthorNode(authorSet1);
+        Map<Long,Node> nodeMap=new HashMap<>(nodes1.size()+1);
+        nodeMap.put(id,centerNode);
+        nodes1.parallelStream().forEach(
+                node->{
+                    nodeMap.put(node.getEntityId(),node);
+                }
+        );
+        List<Link> links=generateLinksWithoutWeight(id,entityMsg.getAuthorType(),nodes1);
+        //用作source节点的id，应在target节点里去掉，否则会产生两条线
+        Set<Long> attendedId=new HashSet<>();
+        attendedId.add(id);
+        for(Author tepAu:authorList1){
+            Set<Author> tmpAuSet=authorDao.getAuthorByCoo(tepAu.getId());
+            List<Node> tmpNodes=new ArrayList<>();
+            tmpAuSet.forEach(
+                    author -> {
+                        if(!attendedId.contains(author.getId())) {
+                            if (nodeMap.containsKey(author.getId())) {
+                                tmpNodes.add(nodeMap.get(author.getId()));
+                            } else {
+                                Node node=new Node(author.getId(),author.getName(),
+                                        entityMsg.getAuthorType());
+                                nodeMap.put(author.getId(), node);
+                                tmpNodes.add(node);
+                            }
+                        }
+                    }
+            );
+            attendedId.add(tepAu.getId());
+            links.addAll(generateLinksWithoutWeight(tepAu.getId(),
+                    entityMsg.getAuthorType(),tmpNodes));
+        }
+        return new GraphVO(id,entityMsg.getAuthorType(),centerName,
+                nodeMap.values(),links,addPopInNode(centerNode));
     }
 
 
@@ -186,7 +199,7 @@ public class BasicGraphFetch {
                 .collect(Collectors.toList());
     }
 
-    private List<Link> generateLinksWithoutWeight(long sourceId, int sourceType, List<Node> targetNodes) {
+    private List<Link> generateLinksWithoutWeight(long sourceId, int sourceType, Collection<Node> targetNodes) {
         return targetNodes.stream().map(
                 targetNode -> new Link(sourceId, sourceType, targetNode.getEntityId(),
                         targetNode.getEntityType(), -1.0))
@@ -194,7 +207,7 @@ public class BasicGraphFetch {
     }
 
 
-    private List<Node> generateAuthorNode(List<Author> authors) {
+    private List<Node> generateAuthorNode(Collection<Author> authors) {
         return authors.stream().map(
                 author -> new Node(author.getId(), author.getName(),
                         entityMsg.getAuthorType())).collect(Collectors.toList());

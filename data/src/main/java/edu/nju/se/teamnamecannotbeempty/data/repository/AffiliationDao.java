@@ -93,9 +93,9 @@ public interface AffiliationDao extends JpaRepository<Affiliation, Long> {
      */
     @Query(nativeQuery=true,
             value="select affiliations.id, af_name, formatted_name, alias_id from affiliations " +
-                    "where affiliations.id in (select" +
+                    "where affiliations.id in (select t2.* from (select" +
                     " aay.affiliation_id from author_affiliation_year aay " +
-            "where aay.author_id=?1 order by aay.`year` desc limit 1)")
+            "where aay.author_id=?1 order by aay.`year` desc limit 1) as t2)")
     Affiliation getNewestAffiliationByAuthor(Long authorId);
 
 }

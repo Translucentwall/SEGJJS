@@ -53,10 +53,15 @@ public class CompleteGraphFetch {
 
     @Cacheable(value = "getCompleteGraph", key = "#p0+'_'+#p1", unless = "#result=null")
     public GraphVO getCompleteGraph(long id, int type) {
-        if (type == entityMsg.getAuthorType()) return authorCompleteGraph(id);
-        else if (type == entityMsg.getAffiliationType()) return affiliationCompleteGraph(id);
-        else if (type == entityMsg.getConferenceType()) return conferenceCompleteGraph(id);
-        else return null;
+        if (type == entityMsg.getAuthorType()) {
+            return authorCompleteGraph(id);
+        } else if (type == entityMsg.getAffiliationType()) {
+            return affiliationCompleteGraph(id);
+        } else if (type == entityMsg.getConferenceType()) {
+            return conferenceCompleteGraph(id);
+        } else {
+            return null;
+        }
     }
 
     private GraphVO authorCompleteGraph(long id) {
@@ -225,16 +230,24 @@ public class CompleteGraphFetch {
         double pop = -1.0;
         if (node.getEntityType() == entityMsg.getAuthorType()) {
             Optional<Author.Popularity> authorPop = authorPopDao.findByAuthor_Id(node.getEntityId());
-            if (authorPop.isPresent()) pop = authorPop.get().getPopularity();
+            if (authorPop.isPresent()) {
+                pop = authorPop.get().getPopularity();
+            }
         } else if (node.getEntityType() == entityMsg.getAffiliationType()) {
             Optional<Affiliation.Popularity> affiPop = affiPopDao.findByAffiliation_Id(node.getEntityId());
-            if (affiPop.isPresent()) pop = affiPop.get().getPopularity();
+            if (affiPop.isPresent()) {
+                pop = affiPop.get().getPopularity();
+            }
         } else if (node.getEntityType() == entityMsg.getPaperType()) {
             Optional<Paper.Popularity> paperPop = paperPopDao.getByPaper_Id(node.getEntityId());
-            if (paperPop.isPresent()) pop = paperPop.get().getPopularity();
+            if (paperPop.isPresent()) {
+                pop = paperPop.get().getPopularity();
+            }
         } else if (node.getEntityType() == entityMsg.getTermType()) {
             Optional<Term.Popularity> termPop = termPopDao.getDistinctByTerm_Id(node.getEntityId());
-            if (termPop.isPresent()) pop = termPop.get().getPopularity();
+            if (termPop.isPresent()) {
+                pop = termPop.get().getPopularity();
+            }
         }
         return pop;
     }

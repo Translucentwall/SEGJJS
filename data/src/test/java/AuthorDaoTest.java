@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -79,5 +80,11 @@ public class AuthorDaoTest {
         assertEquals(2,authorList.size());
     }
 
+    @Test
+    public void getAuthorByCoo(){
+        Set<Author> authorList=authorDao.getAuthorByCoo(1L);
+        assertNotNull(authorList);
+        assertEquals(2,authorList.size());
+    }
 
 }
