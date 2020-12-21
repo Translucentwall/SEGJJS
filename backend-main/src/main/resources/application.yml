@@ -45,13 +45,6 @@ rank-msg:
   each-num: 10
   mismatch-page-number: "查询的页号与结果数量不匹配"
 
-security-msg:
-  need-authorities: "Need Authorities!"
-  login-failure: "Login Failure!"
-  login-success: "Login Success!"
-  logout-success: "Logout Success!"
-  no-such-user: "Account Not Exist!"
-
 entity-msg:
   author-type: 1
   affiliation-type: 2

@@ -86,11 +86,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Security-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
         <!--JSON封装-->
         <dependency>
             <groupId>com.alibaba</groupId>
