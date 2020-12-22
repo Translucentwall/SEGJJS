@@ -59,7 +59,7 @@ public class PeerReviewServiceImpl implements PeerReviewService {
         FullTextEntityManager fullTextEntityManager=Search.getFullTextEntityManager(entityManager);
         QueryBuilder queryBuilder=fullTextEntityManager.getSearchFactory().buildQueryBuilder()
                 .forEntity(Term.class).get();
-        Query luceneQuery=queryBuilder.keyword().fuzzy().withEditDistanceUpTo(2)
+        Query luceneQuery=queryBuilder.keyword().fuzzy().withEditDistanceUpTo(1)
                 .withPrefixLength(0).onField("content").matching(prefix).createQuery();
         FullTextQuery fullTextQuery=fullTextEntityManager.createFullTextQuery(luceneQuery,Term.class);
         fullTextQuery.setSort(Sort.RELEVANCE);
