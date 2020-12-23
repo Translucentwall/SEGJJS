@@ -47,6 +47,7 @@ public class DataImportJob implements IDataImportJob {
             jsonList.add(getClass().getResourceAsStream("/datasource/tse.json"));
             jsonList.add(getClass().getResourceAsStream("/datasource/toplas.json"));
             jsonList.add(getClass().getResourceAsStream("/datasource/ieee_journals.json"));
+            jsonList.add(getClass().getResourceAsStream("/datasource/acm_journals.json"));
 
 
             String name = "all together";
