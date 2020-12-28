@@ -81,7 +81,7 @@ public interface PaperDao extends JpaRepository<Paper, Long> {
      * @前置条件 id不为null
      * @后置条件 无
      */
-    @Query("select p from Paper p where exists (select 1 from p.author_keywords ak where ak.id = ?1)")
+    @Query("select distinct p from Paper p where exists (select 1 from p.author_keywords ak where ak.id = ?1)")
     List<Paper> getPapersByKeyword(Long id);
 
     /**
@@ -90,7 +90,7 @@ public interface PaperDao extends JpaRepository<Paper, Long> {
      * @param id 作者Id
      * @return 论文集合
      */
-    @Query("select p from Paper p inner join p.aa aa where aa.author.id = ?1")
+    @Query("select distinct p from Paper p inner join p.aa aa where aa.author.id = ?1")
     List<Paper> findByAuthorId(Long id);
 
     /**
@@ -99,7 +99,7 @@ public interface PaperDao extends JpaRepository<Paper, Long> {
      * @param id 机构Id
      * @return 论文集合
      */
-    @Query("select p from Paper p inner join p.aa aa where aa.affiliation.id = ?1")
+    @Query("select distinct p from Paper p inner join p.aa aa where aa.affiliation.id = ?1")
     List<Paper> findByAffiId(Long id);
 
     /**
@@ -108,7 +108,7 @@ public interface PaperDao extends JpaRepository<Paper, Long> {
      * @param id 会议或出版物Id
      * @return 论文集合
      */
-    @Query("select p from Paper p where p.conference.id = ?1")
+    @Query("select distinct p from Paper p where p.conference.id = ?1")
     List<Paper> findByConferenceID(Long id);
 
     /**
