@@ -374,12 +374,13 @@ public class AcademicEntityFetch {
                 List<Author_Affiliation> author_affiliations=tmp.getAa();
                 for(Author_Affiliation author_affiliation:author_affiliations){
                     Author author=author_affiliation.getAuthor();
+                    if(author==null)
+                        continue;
                     String name=author.getName();
                     if(authors.contains(name))
                         continue;
                     authors.add(name);
-                    if(author==null)
-                        continue;
+
                     answer.add(new TitleAndId(author.getName(),author.getId()));
                 }
             }
@@ -397,12 +398,14 @@ public class AcademicEntityFetch {
                 List<Author_Affiliation> author_affiliations=tmp.getAa();
                 for(Author_Affiliation author_affiliation:author_affiliations){
                     Author author=author_affiliation.getAuthor();
+                    if(author==null)
+                        continue;
+
                     String name=author.getName();
                     if(authors.contains(name))
                         continue;
                     authors.add(name);
-                    if(author==null)
-                        continue;
+
                     answer.add(new TitleAndId(author.getName(),author.getId()));
                 }
             }
