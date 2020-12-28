@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Struct;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,15 +84,16 @@ public class PaperServiceImpl implements PaperService {
                 continue;
             refers.add(new TitleAndId(tmp.getTitle(),tmp.getId()));
         }
+        refers.sort(Comparator.comparing(TitleAndId::getTitle));
         List<Ref> refees=refDao.findByReferee_Id(paper.getId());
         List<TitleAndId> referees=new ArrayList<>();
         for(Ref ref:refees){
-            Paper tmp=ref.getReferee();
+            Paper tmp=ref.getReferer();
             if(tmp==null)
                 continue;
             referees.add(new TitleAndId(tmp.getTitle(),tmp.getId()));
         }
-
+        referees.sort(Comparator.comparing(TitleAndId::getTitle));
         List<Term> termListKeywords = paper.getAuthor_keywords();
 
         List<String> keywords;

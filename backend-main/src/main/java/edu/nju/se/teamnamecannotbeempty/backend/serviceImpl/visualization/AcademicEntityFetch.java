@@ -115,9 +115,11 @@ public class AcademicEntityFetch {
                 finalkeyword=keywordsYear.getKeyword();
             }
         }
+        if("".equals(finalkeyword)){
+            finalkeyword="programming languages and systems";
+        }
         keywordPre.add(finalkeyword);
-        keywordsYears.add(new KeywordsYear(2021,keywordPre));
-
+        keywordsYears.add(new KeywordsYear(2021, keywordPre));
 
         //生成代表作
         List<SimplePaperVO> simplePaperVOS = allPapers.stream().map(
@@ -385,6 +387,7 @@ public class AcademicEntityFetch {
                 }
             }
         }
+        answer.sort(Comparator.comparing(TitleAndId::getTitle));
         return answer;
     }
 
@@ -394,7 +397,7 @@ public class AcademicEntityFetch {
         for(Paper paper:papers){
             List<Ref> refs=refDao.findByReferee_Id(paper.getId());
             for(Ref ref:refs){
-                Paper tmp=ref.getReferee();
+                Paper tmp=ref.getReferer();
                 List<Author_Affiliation> author_affiliations=tmp.getAa();
                 for(Author_Affiliation author_affiliation:author_affiliations){
                     Author author=author_affiliation.getAuthor();
@@ -410,6 +413,7 @@ public class AcademicEntityFetch {
                 }
             }
         }
+        answer.sort(Comparator.comparing(TitleAndId::getTitle));
         return answer;
     }
 }

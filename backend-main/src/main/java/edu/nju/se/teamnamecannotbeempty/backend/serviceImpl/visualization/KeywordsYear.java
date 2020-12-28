@@ -9,7 +9,10 @@ public class KeywordsYear {
     private HashMap<String,Integer> keywords_counts;
     private String keyword;
 
-    KeywordsYear(Integer year,List<String> keywords){
+    public KeywordsYear() {
+    }
+
+    KeywordsYear(Integer year, List<String> keywords){
         this.year=year;
         this.keywords=keywords;
         keywords_counts=new HashMap<>();
